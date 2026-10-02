@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resilient Component</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <main>
+        <section
+            class="data-component"
+            aria-labelledby="data-title"
+        >
+
+            <h1 id="data-title">
+                Project Data
+            </h1>
+
+            <section
+                id="component-state"
+                aria-live="polite"
+            >
+
+                <div class="loading-state">
+                    <span class="skeleton-item"></span>
+                    <span class="skeleton-item"></span>
+                    <span class="skeleton-item"></span>
+                </div>
+
+            </section>
+
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
