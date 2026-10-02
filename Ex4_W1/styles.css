@@ -133,3 +133,32 @@ body {
         flex-direction: column;
     }
 }
+
+.empty-state {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: 1px solid var(--color-skeleton-highlight);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+}
+
+.empty-state h2,
+.empty-state p {
+    margin: 0;
+}
+
+.retry-button {
+    justify-self: start;
+    padding: var(--space-3) var(--space-4);
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--color-skeleton-highlight);
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.retry-button:focus-visible {
+    outline: 3px solid var(--color-text);
+    outline-offset: 3px;
+}
