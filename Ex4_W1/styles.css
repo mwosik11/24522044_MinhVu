@@ -162,3 +162,16 @@ body {
     outline: 3px solid var(--color-text);
     outline-offset: 3px;
 }
+.error-state {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: 1px solid var(--color-skeleton-highlight);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+}
+
+.error-state h2,
+.error-state p {
+    margin: 0;
+}
