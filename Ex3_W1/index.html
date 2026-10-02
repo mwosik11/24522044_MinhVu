@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jane Doe - Lead Engineer</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <!-- Hero Section -->
+         <section class="hero">
+    <img
+        src="images/LogoKhoa.jpg"
+        alt="Jane Doe"
+        width="800"
+        height="800"
+    >
+
+    <section class="hero-content">
+        <h1>Jane Doe, Lead Engineer</h1>
+
+        <p>
+            I build scalable software systems and accessible web applications.
+        </p>
+
+        <button
+    type="button"
+    id="theme-toggle"
+    aria-pressed="false"
+    aria-label="Switch to dark mode"
+>
+    <span id="theme-icon" aria-hidden="true">☀</span>
+</button>
+    </section>
+</section>
+    </header>
+
+    <main>
+
+        <!-- Skills Matrix -->
+         <section class="skills" id="skills">
+
+    <h2>Skills</h2>
+
+    <section class="skill-category">
+        <h3>Frontend</h3>
+
+        <ul class="skill-grid">
+            <li><span class="badge">HTML</span></li>
+            <li><span class="badge">CSS</span></li>
+            <li><span class="badge">JavaScript</span></li>
+        </ul>
+    </section>
+
+    <section class="skill-category">
+        <h3>Backend</h3>
+
+        <ul class="skill-grid">
+            <li><span class="badge">Node.js</span></li>
+            <li><span class="badge">SQL</span></li>
+            <li><span class="badge">REST API</span></li>
+        </ul>
+    </section>
+
+</section>
+
+        <!-- Project Cards -->
+         <section class="projects" id="projects">
+
+    <h2>Projects</h2>
+
+    <article class="project-card" data-category="frontend">
+
+        <header class="card-header">
+            <h3>Distributed State Engine</h3>
+
+            <span class="badge">
+                TypeScript
+            </span>
+        </header>
+
+        <p>
+            Lightweight event bus built without external libraries.
+        </p>
+
+        <footer class="card-footer">
+            <a
+                href="#"
+                aria-label="View State Engine repository"
+            >
+                Source Code
+            </a>
+        </footer>
+
+    </article>
+
+</section>
+
+        <!-- Contact Form -->
+         <section class="contact" id="contact">
+
+    <h2>Contact</h2>
+
+    <form id="contact-form">
+
+        <label for="name">
+            Name
+        </label>
+
+        <input
+            type="text"
+            id="name"
+            name="name"
+            required
+        >
+
+        <label for="email">
+            Email
+        </label>
+
+        <input
+            type="email"
+            id="email"
+            name="email"
+            required
+        >
+
+        <label for="message">
+            Message
+        </label>
+
+        <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+        ></textarea>
+
+        <button type="submit">
+            Send Message
+        </button>
+
+        <p
+            id="form-status"
+            aria-live="polite"
+        ></p>
+
+    </form>
+
+</section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
