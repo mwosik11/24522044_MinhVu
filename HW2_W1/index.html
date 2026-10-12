@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An interactive drum kit with keyboard controls and beat recording.">
+  <title>Drum Kit Engine</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <h1>Drum Kit Engine</h1>
+    <p>Play drum sounds with your keyboard or mouse.</p>
+  </header>
+
+  <main id="main-content">
+    <section aria-labelledby="drum-kit-title">
+      <h2 id="drum-kit-title">Drum Pads</h2>
+
+      <ul class="drum-grid">
+        <li>
+          <button
+            class="drum-pad"
+            type="button"
+            data-key="a"
+            data-sound="assets/audio/kick.wav"
+            aria-label="Play kick drum, A key">
+            <span class="pad-name">Kick</span>
+            <kbd>A</kbd>
+          </button>
+        </li>
+
+        <li>
+          <button
+            class="drum-pad"
+            type="button"
+            data-key="s"
+            data-sound="assets/audio/snare.wav"
+            aria-label="Play snare drum, S key">
+            <span class="pad-name">Snare</span>
+            <kbd>S</kbd>
+          </button>
+        </li>
+
+        <li>
+          <button
+            class="drum-pad"
+            type="button"
+            data-key="d"
+            data-sound="assets/audio/hihat.wav"
+            aria-label="Play hi-hat, D key">
+            <span class="pad-name">Hi-Hat</span>
+            <kbd>D</kbd>
+          </button>
+        </li>
+
+        <li>
+          <button
+            class="drum-pad"
+            type="button"
+            data-key="f"
+            data-sound="assets/audio/tom.wav"
+            aria-label="Play tom drum, F key">
+            <span class="pad-name">Tom</span>
+            <kbd>F</kbd>
+          </button>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="recorder-title">
+      <h2 id="recorder-title">Beat Recorder</h2>
+      <p id="recorder-status" role="status" aria-live="polite">
+        Recorder ready. No events recorded.
+      </p>
+      <div class="recorder-controls">
+        <button id="start-recording" type="button">Start Recording</button>
+        <button id="stop-recording" type="button" disabled>Stop Recording</button>
+        <button id="clear-recording" type="button">Clear Recording</button>
+      </div>
+      <ol id="recording-list" aria-label="Recorded drum events"></ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Drum Kit Engine — Vanilla JavaScript</p>
+  </footer>
+</body>
+</html>
+```
