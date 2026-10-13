@@ -53,3 +53,24 @@ Build a resilient landing page using semantic HTML5, modern CSS, and Vanilla Jav
 - Do not combine unrelated features into a monolithic commit.
 - Inspect changes before committing.
 - Maintain at least five atomic commits corresponding to the implementation slices and supporting work.
+### Countdown Engine — HTML/JavaScript Contract
+
+#### HTML Interface
+- The countdown root element must expose a `data-countdown-target` attribute.
+- The target value must be a valid UTC ISO 8601 timestamp.
+- The output elements must use `data-unit` values: `days`, `hours`, `minutes`, and `seconds`.
+- The countdown status element must be available for expiration and invalid-timestamp messages.
+
+#### JavaScript Responsibilities
+- Read the target timestamp from the HTML contract.
+- Calculate remaining time using the target timestamp and the current time.
+- Recalculate from timestamps on every update; do not decrement a stored counter.
+- Update only the countdown output elements and status element.
+- Handle invalid timestamps and expired targets safely.
+
+#### Verification Criteria
+- Correctly calculate the remaining days, hours, minutes, and seconds.
+- Do not accumulate timer drift through repeated decrement operations.
+- Handle expired and invalid timestamps.
+- Avoid console errors.
+- Preserve accessibility and responsive layout.
