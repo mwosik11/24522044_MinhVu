@@ -50,6 +50,49 @@
         Countdown is waiting to start.
       </p>
     </section>
+
+    <section aria-labelledby="registration-heading">
+      <h2 id="registration-heading">Get Launch Updates</h2>
+
+      <p>Register your details to receive launch information.</p>
+
+    <form id="registration-form">
+      <p>
+        <label for="applicant-name">Full Name</label>
+        <input
+          type="text"
+          id="applicant-name"
+          name="name"
+          autocomplete="name"
+          required
+          minlength="3"
+        >
+      </p>
+
+      <p>
+        <label for="applicant-email">Email Address</label>
+        <input
+          type="email"
+          id="applicant-email"
+          name="email"
+          autocomplete="email"
+          required
+        >
+      </p>
+
+      <button type="submit" id="submit-button">
+        Register
+      </button>
+
+      <p
+        id="form-status"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >Please complete the form to register.</p>
+      </form>
+    </section>
+    
   </main>
 </body>
 </html>
