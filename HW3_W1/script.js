@@ -145,6 +145,11 @@ function transitionFormState(nextState) {
 }
 
 function renderFormState() {
+  const isSubmitting = currentFormState === formStates.SUBMITTING;
+
+  submitButton.disabled = isSubmitting;
+  registrationForm.setAttribute("aria-busy", String(isSubmitting));
+
   switch (currentFormState) {
     case formStates.IDLE:
       formStatus.textContent = "Please complete the form to register.";
@@ -170,23 +175,45 @@ function renderFormState() {
   }
 }
 
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
 async function processRegistration(formData) {
-  /*
-   * Demonstration only:
-   * Replace this simulated operation with a real API request later.
-   * No registration data is currently sent to a server.
-   */
+  // Demo only: no data is sent to a server.
   await new Promise((resolve) => {
     setTimeout(resolve, 500);
   });
 
-  if (!formData.get("name") || !formData.get("email")) {
-    throw new Error("Required registration fields are missing.");
+  const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+
+  const namePattern =
+    /^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u;
+
+  if (name.length < 3 || !namePattern.test(name)) {
+    throw new ValidationError(
+      "Please enter a valid name using letters and spaces."
+    );
   }
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new ValidationError("Please provide a valid email address.");
+  }
+
+  // IMPORTANT: return the validated data.
+  return { name, email };
 }
 
 registrationForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  if (currentFormState === formStates.SUBMITTING) {
+    return;
+  }
 
   if (!registrationForm.reportValidity()) {
     return;
@@ -198,12 +225,26 @@ registrationForm?.addEventListener("submit", async (event) => {
 
   try {
     const formData = new FormData(registrationForm);
+    const result = await processRegistration(formData);
 
-    await processRegistration(formData);
+    // Access the returned object safely.
+    console.info("Registration demo validated:", {
+      name: result.name,
+      email: result.email,
+    });
 
     transitionFormState(formStates.SUCCESS);
   } catch (error) {
-    console.error("Registration processing failed:", error);
+    if (error instanceof ValidationError) {
+      transitionFormState(formStates.ERROR);
+      formStatus.textContent = error.message;
+      return;
+    }
+
+    console.error("Unexpected registration failure:", error);
+
     transitionFormState(formStates.ERROR);
+    formStatus.textContent =
+      "An unexpected error occurred. Please try again.";
   }
 });
