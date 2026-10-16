@@ -96,3 +96,18 @@ test('rejects an empty error message', () => {
 });
 
 console.log(`State machine tests: ${passed} passed, ${failed} failed.`);
+
+test('allows LOADING -> LOADING for a new request', () => {
+  const currentState = {
+    status: STATUS.LOADING,
+  };
+
+  const next = transition(currentState, {
+    status: STATUS.LOADING,
+  });
+
+  assert(
+    next.status === STATUS.LOADING,
+    'Expected LOADING after starting another request.'
+  );
+});
