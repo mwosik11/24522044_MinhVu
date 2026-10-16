@@ -1,6 +1,7 @@
 
 const DATA_ENDPOINT =
   'https://jsonplaceholder.typicode.com/posts?_limit=5';
+  //'https://jsonplaceholder.typicode.com/invalid-endpoint';
 
 /**
  * Fetches feed data and validates the server response.
