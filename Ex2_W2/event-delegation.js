@@ -4,7 +4,7 @@
  * Supported events: click, input, keydown
  */
 
-const SUPPORTED_EVENTS = ['click', 'input', 'keydown'];
+const SUPPORTED_EVENTS = ['click', 'input', 'keydown', 'submit'];
 const registeredRoots = new WeakMap();
 
 export function setupEventDelegation(rootContainer) {

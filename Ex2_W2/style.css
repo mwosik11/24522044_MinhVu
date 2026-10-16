@@ -1,0 +1,177 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 40px 16px;
+  background: #f3f5f9;
+  color: #202938;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid #e3e7ef;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgb(25 40 70 / 8%);
+}
+
+.app-header {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #5269c8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.subtitle {
+  margin: 10px 0 0;
+  color: #687386;
+  line-height: 1.5;
+}
+
+.task-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-form input {
+  min-width: 0;
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid #d5dbe6;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+}
+
+.add-button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #4359bd;
+  color: white;
+  font-weight: 700;
+}
+
+.task-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid #e8ebf1;
+  color: #687386;
+  font-size: 13px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.filter-button {
+  padding: 8px 14px;
+  border: 1px solid #dce1eb;
+  border-radius: 20px;
+  background: white;
+  color: #536075;
+}
+
+.filter-button.active {
+  border-color: #4359bd;
+  background: #4359bd;
+  color: white;
+}
+
+.task-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #e5e8ef;
+  border-radius: 9px;
+}
+
+.task-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.task-label input {
+  accent-color: #4359bd;
+}
+
+.task-item.completed .task-label span {
+  color: #8a93a3;
+  text-decoration: line-through;
+}
+
+.delete-button {
+  flex-shrink: 0;
+  padding: 7px 10px;
+  border: 1px solid #ead4d4;
+  border-radius: 7px;
+  background: white;
+  color: #b33a3a;
+  font-size: 13px;
+}
+
+.empty-state {
+  padding: 28px 12px;
+  color: #7a8495;
+  text-align: center;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #9eafff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .app-container {
+    padding: 22px 16px;
+  }
+
+  .task-form {
+    flex-direction: column;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+}
