@@ -1,3 +1,4 @@
+
 export function createTextElement(text) {
   return {
     type: 'TEXT_ELEMENT',
@@ -24,7 +25,6 @@ export function createElement(type, props, ...children) {
         child !== false
     )
     .map((child) => {
-      // Convert text and numbers into text VNodes.
       if (
         typeof child === 'string' ||
         typeof child === 'number'
@@ -32,7 +32,6 @@ export function createElement(type, props, ...children) {
         return createTextElement(child);
       }
 
-      // Preserve an existing valid VNode.
       if (
         typeof child === 'object' &&
         child !== null &&
@@ -70,17 +69,14 @@ export function renderToDOM(vNode) {
     throw new TypeError('renderToDOM: invalid VNode.');
   }
 
-  // 1. Render text nodes safely.
   if (vNode.type === 'TEXT_ELEMENT') {
     return document.createTextNode(
       String(vNode.props.nodeValue ?? '')
     );
   }
 
-  // 2. Create a real HTML element.
   const dom = document.createElement(vNode.type);
 
-  // 3. Apply props and register event handlers.
   Object.entries(vNode.props).forEach(([name, value]) => {
     if (
       name === 'children' ||
@@ -92,27 +88,26 @@ export function renderToDOM(vNode) {
       return;
     }
 
-    // Prevent raw HTML injection.
     if (name === 'dangerouslySetInnerHTML') {
       throw new Error(
         'renderToDOM: raw HTML injection is not supported.'
       );
     }
 
-    // Register events using addEventListener().
     if (/^on/i.test(name)) {
-      if (!/^on[a-z]+$/i.test(name) || typeof value !== 'function') {
+      if (
+        !/^on[a-z]+$/i.test(name) ||
+        typeof value !== 'function'
+      ) {
         throw new TypeError(
           `renderToDOM: invalid event prop "${name}".`
         );
       }
 
-      const eventType = name.slice(2).toLowerCase();
-      dom.addEventListener(eventType, value);
+      dom.addEventListener(name.slice(2).toLowerCase(), value);
       return;
     }
 
-    // Handle common DOM property aliases.
     if (name === 'className') {
       dom.className = String(value);
       return;
@@ -123,7 +118,6 @@ export function renderToDOM(vNode) {
       return;
     }
 
-    // Apply inline styles from an object.
     if (name === 'style') {
       if (
         typeof value !== 'object' ||
@@ -139,7 +133,6 @@ export function renderToDOM(vNode) {
       return;
     }
 
-    // Reject dangerous URL schemes.
     if (
       ['href', 'src', 'xlink:href'].includes(name) &&
       /^\s*(javascript|vbscript):/i.test(String(value))
@@ -147,7 +140,6 @@ export function renderToDOM(vNode) {
       throw new Error('renderToDOM: unsafe URL scheme.');
     }
 
-    // Handle common boolean DOM properties.
     if (typeof value === 'boolean') {
       const booleanProperties = [
         'disabled',
@@ -169,11 +161,9 @@ export function renderToDOM(vNode) {
       return;
     }
 
-    // Set ordinary attributes.
     dom.setAttribute(name, String(value));
   });
 
-  // 4. Recursively render and append children.
   vNode.props.children.forEach((child) => {
     dom.appendChild(renderToDOM(child));
   });

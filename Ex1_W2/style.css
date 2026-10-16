@@ -7,6 +7,8 @@ body {
   padding: 2rem;
   font-family: Arial, sans-serif;
   line-height: 1.5;
+  color: #1f2937;
+  background: #f8fafc;
 }
 
 #app {
@@ -14,11 +16,31 @@ body {
   margin: 0 auto;
 }
 
+#root-view {
+  padding: 2rem;
+  background: white;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
+}
+
 .hero {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 button {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background: #1d4ed8;
+  color: white;
   cursor: pointer;
+}
+
+button:hover {
+  background: #1e40af;
+}
+
+button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
 }
