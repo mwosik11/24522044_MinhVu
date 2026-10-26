@@ -14,7 +14,7 @@ const columns = [
   { header: 'Status', accessorKey: 'status', sortable: true },
 ] as const satisfies import('./data-grid-contract').ColumnDef<Employee>[];
 
-const app = document.querySelector<HTMLDivElement>('#app');
+const app = document.querySelector<HTMLElement>('#app');
 
 if (!app) {
   throw new Error('App root element #app was not found.');
