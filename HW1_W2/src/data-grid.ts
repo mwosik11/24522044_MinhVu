@@ -88,39 +88,102 @@ export function createDataGrid<T extends object>(
     });
   };
 
+
+let activeRowIndex = 0;
+let activeColumnIndex = 0;
+
+const setActiveCell = (
+  rowIndex: number,
+  columnIndex: number,
+): void => {
+  const rows = tbody.querySelectorAll<HTMLTableRowElement>('tr');
+
+  if (rows.length === 0 || props.columns.length === 0) {
+    return;
+  }
+
+  activeRowIndex = Math.max(0, Math.min(rowIndex, rows.length - 1));
+  activeColumnIndex = Math.max(
+    0,
+    Math.min(columnIndex, props.columns.length - 1),
+  );
+
+  const cells = rows[activeRowIndex].querySelectorAll<HTMLTableCellElement>(
+    '[role="gridcell"]',
+  );
+
+  cells.forEach((cell, index) => {
+    cell.tabIndex = index === activeColumnIndex ? 0 : -1;
+  });
+
+  cells[activeColumnIndex]?.focus();
+};
+
+
   const renderRows = (): void => {
     tbody.replaceChildren();
 
     const startIndex = (currentPage - 1) * pageSize;
     const pageData = sortedData.slice(startIndex, startIndex + pageSize);
 
-    for (const item of pageData) {
-      const row = document.createElement('tr');
-      row.setAttribute('role', 'row');
-      row.tabIndex = 0;
+    
+for (const [rowIndex, item] of pageData.entries()) {
+  const row = document.createElement('tr');
+  row.setAttribute('role', 'row');
 
-      for (const column of props.columns) {
-        const cell = document.createElement('td');
-        cell.setAttribute('role', 'gridcell');
+  for (const [columnIndex, column] of props.columns.entries()) {
+    const cell = document.createElement('td');
+    cell.setAttribute('role', 'gridcell');
+    cell.tabIndex = rowIndex === 0 && columnIndex === 0 ? 0 : -1;
 
-        const value = item[column.accessorKey];
-        cell.textContent = String(value ?? '');
+    const value = item[column.accessorKey];
+    cell.textContent = String(value ?? '');
 
-        row.append(cell);
-      }
+    cell.addEventListener('click', () => {
+      setActiveCell(rowIndex, columnIndex);
+    });
 
-      row.addEventListener('click', () => {
-        props.onRowSelect?.(item);
-      });
 
-      row.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          props.onRowSelect?.(item);
-        }
-      });
+cell.addEventListener('keydown', (event: KeyboardEvent) => {
+  let nextRow = rowIndex;
+  let nextColumn = columnIndex;
 
-      tbody.append(row);
+  switch (event.key) {
+    case 'ArrowUp':
+      nextRow -= 1;
+      break;
+    case 'ArrowDown':
+      nextRow += 1;
+      break;
+    case 'ArrowLeft':
+      nextColumn -= 1;
+      break;
+    case 'ArrowRight':
+      nextColumn += 1;
+      break;
+    case 'Enter':
+    case ' ':
+      event.preventDefault();
+      props.onRowSelect?.(item);
+      return;
+    default:
+      return;
+  }
+
+  event.preventDefault();
+  setActiveCell(nextRow, nextColumn);
+});
+
+
+    row.append(cell);
+  }
+
+  row.addEventListener('click', () => {
+    props.onRowSelect?.(item);
+  });
+
+  tbody.append(row);
+
     }
 
     const totalItems = sortedData.length;
