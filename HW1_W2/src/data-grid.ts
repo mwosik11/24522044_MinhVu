@@ -4,7 +4,6 @@ import type { DataGridProps } from './data-grid-contract';
 type SortDirection = 'ascending' | 'descending';
 
 export function createDataGrid<T extends object>(
-    
   props: DataGridProps<T>,
 ): HTMLDivElement {
   const table = document.createElement('table');
@@ -16,6 +15,9 @@ export function createDataGrid<T extends object>(
   headerRow.setAttribute('role', 'row');
 
   const tbody = document.createElement('tbody');
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'data-grid';
 
   const toolbar = document.createElement('div');
   toolbar.className = 'data-grid-toolbar';
@@ -38,6 +40,42 @@ export function createDataGrid<T extends object>(
   let sortKey: keyof T | null = null;
   let sortDirection: SortDirection = 'ascending';
   let filterQuery = '';
+  let currentPage = 1;
+  let pageSize = 5;
+
+  const pagination = document.createElement('div');
+  pagination.className = 'data-grid-pagination';
+  pagination.setAttribute('aria-label', 'Table pagination');
+
+  const pageInfo = document.createElement('p');
+  pageInfo.className = 'data-grid-page-info';
+  pageInfo.setAttribute('aria-live', 'polite');
+
+  const pageSizeLabel = document.createElement('label');
+  pageSizeLabel.htmlFor = 'data-grid-page-size';
+  pageSizeLabel.textContent = 'Rows per page:';
+
+  const pageSizeSelect = document.createElement('select');
+  pageSizeSelect.id = 'data-grid-page-size';
+  pageSizeSelect.setAttribute('aria-label', 'Rows per page');
+
+  for (const size of [5, 10, 20]) {
+    const option = document.createElement('option');
+    option.value = String(size);
+    option.textContent = String(size);
+    option.selected = size === pageSize;
+    pageSizeSelect.append(option);
+  }
+
+  pageSizeLabel.append(pageSizeSelect);
+
+  const previousButton = document.createElement('button');
+  previousButton.type = 'button';
+  previousButton.textContent = 'Previous';
+
+  const nextButton = document.createElement('button');
+  nextButton.type = 'button';
+  nextButton.textContent = 'Next';
 
   const compareValues = (a: unknown, b: unknown): number => {
     if (typeof a === 'number' && typeof b === 'number') {
@@ -53,7 +91,10 @@ export function createDataGrid<T extends object>(
   const renderRows = (): void => {
     tbody.replaceChildren();
 
-    for (const item of sortedData) {
+    const startIndex = (currentPage - 1) * pageSize;
+    const pageData = sortedData.slice(startIndex, startIndex + pageSize);
+
+    for (const item of pageData) {
       const row = document.createElement('tr');
       row.setAttribute('role', 'row');
       row.tabIndex = 0;
@@ -81,45 +122,82 @@ export function createDataGrid<T extends object>(
 
       tbody.append(row);
     }
+
+    const totalItems = sortedData.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    const firstItem = totalItems === 0 ? 0 : startIndex + 1;
+    const lastItem = Math.min(startIndex + pageSize, totalItems);
+
+    pageInfo.textContent =
+      `Showing ${firstItem}–${lastItem} of ${totalItems} employees`;
+
+    previousButton.disabled = currentPage <= 1;
+    nextButton.disabled = currentPage >= totalPages;
+
+    pagination.setAttribute('aria-label', `Page ${currentPage} of ${totalPages}`);
   };
 
   const applyFilterAndSort = (): void => {
-  const query = filterQuery.trim().toLowerCase();
+    const query = filterQuery.trim().toLowerCase();
 
-  filteredData = props.data.filter((item) => {
-  if (!query) return true;
+    filteredData = props.data.filter((item) => {
+      if (!query) return true;
 
-  return props.columns.some((column) => {
-    const value = String(item[column.accessorKey] ?? '');
-      const normalizedValue = value.toLowerCase();
+      return props.columns.some((column) => {
+        const value = String(item[column.accessorKey] ?? '');
+        const normalizedValue = value.toLowerCase();
 
-    // Status must match exactly when searching for a status.
-    if (column.accessorKey === 'status') {
-      return normalizedValue === query;
+        if (column.accessorKey === 'status') {
+          return normalizedValue === query;
+        }
+
+        return normalizedValue.includes(query);
+      });
+    });
+
+    sortedData = [...filteredData];
+
+    if (sortKey !== null) {
+      sortedData.sort((a, b) => {
+        const result = compareValues(a[sortKey!], b[sortKey!]);
+
+        return sortDirection === 'ascending' ? result : -result;
+      });
     }
 
-    // Other columns support partial matching.
-    return normalizedValue.includes(query);
+    const totalPages = Math.max(1, Math.ceil(sortedData.length / pageSize));
+    currentPage = Math.min(currentPage, totalPages);
+
+    renderRows();
+  };
+
+  searchInput.addEventListener('input', () => {
+    filterQuery = searchInput.value;
+    currentPage = 1;
+    applyFilterAndSort();
   });
-});
 
-  sortedData = [...filteredData];
+  pageSizeSelect.addEventListener('change', () => {
+    pageSize = Number(pageSizeSelect.value);
+    currentPage = 1;
+    renderRows();
+  });
 
-  if (sortKey !== null) {
-    sortedData.sort((a, b) => {
-      const result = compareValues(a[sortKey!], b[sortKey!]);
+  previousButton.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage -= 1;
+      renderRows();
+    }
+  });
 
-      return sortDirection === 'ascending' ? result : -result;
-    });
-  }
+  nextButton.addEventListener('click', () => {
+    const totalPages = Math.max(1, Math.ceil(sortedData.length / pageSize));
 
-  renderRows();
-};
-
-    searchInput.addEventListener('input', () => {
-        filterQuery = searchInput.value;
-        applyFilterAndSort();
-    });
+    if (currentPage < totalPages) {
+      currentPage += 1;
+      renderRows();
+    }
+  });
 
   for (const column of props.columns) {
     const th = document.createElement('th');
@@ -132,10 +210,7 @@ export function createDataGrid<T extends object>(
     headerButton.disabled = !column.sortable;
 
     if (column.sortable) {
-      headerButton.setAttribute(
-        'aria-label',
-        `Sort by ${column.header}`,
-      );
+      headerButton.setAttribute('aria-label', `Sort by ${column.header}`);
 
       headerButton.addEventListener('click', () => {
         if (sortKey === column.accessorKey) {
@@ -146,14 +221,12 @@ export function createDataGrid<T extends object>(
           sortDirection = 'ascending';
         }
 
-        const headerCells = headerRow.querySelectorAll<HTMLTableCellElement>('th');
-
-        headerCells.forEach((header) => {
-            header.removeAttribute('aria-sort');
+        headerRow.querySelectorAll<HTMLTableCellElement>('th').forEach((header) => {
+          header.removeAttribute('aria-sort');
         });
 
         th.setAttribute('aria-sort', sortDirection);
-
+        currentPage = 1;
         applyFilterAndSort();
       });
     } else {
@@ -165,14 +238,12 @@ export function createDataGrid<T extends object>(
   }
 
   thead.append(headerRow);
-  table.append(thead);
-  table.append(tbody);
+  table.append(thead, tbody);
 
-const wrapper = document.createElement('div');
-wrapper.className = 'data-grid';
-wrapper.append(toolbar, table);
+  pagination.append(pageInfo, pageSizeLabel, previousButton, nextButton);
+  wrapper.append(toolbar, table, pagination);
 
-applyFilterAndSort();
+  applyFilterAndSort();
 
-return wrapper;
+  return wrapper;
 }
