@@ -17,6 +17,8 @@ export interface AudioTaskQueue {
   cancel(taskId: string): boolean;
 
   getTaskState(taskId: string): AudioTaskState | undefined;
+  
+  takeResult(taskId: string): AudioTaskResult | undefined;
 
   getPendingTaskIds(): readonly string[];
 
