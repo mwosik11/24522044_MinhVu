@@ -1,0 +1,33 @@
+# HW2 — Task Decomposition
+
+## Stage 0: Setup
+
+- [ ] T-01: Define project rules and task decomposition.
+- [ ] T-02: Initialize the Vite TypeScript project.
+
+## Stage 1: Contracts
+
+- [ ] T-03: Define AudioTask and queue contracts.
+- [ ] T-04: Define task states, cancellation, and result types.
+
+## Stage 2: Queue Engine
+
+- [ ] T-05: Implement FIFO enqueue and processing.
+- [ ] T-06: Implement cancellation and failure handling.
+
+## Stage 3: Web Audio
+
+- [ ] T-07: Implement audio download and buffer decoding.
+- [ ] T-08: Implement playback and audio-node cleanup.
+
+## Stage 4: Visualizer
+
+- [ ] T-09: Integrate AnalyserNode and FFT configuration.
+- [ ] T-10: Implement Canvas rendering with requestAnimationFrame.
+
+## Stage 5: Verification
+
+- [ ] T-11: Verify FIFO ordering, cancellation, and error handling.
+- [ ] T-12: Verify audio resource cleanup and animation lifecycle.
+- [ ] T-13: Complete UI and manual browser tests.
+- [ ] T-14: Document at least three actual AI-induced defects with evidence.
