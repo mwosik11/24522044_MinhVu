@@ -144,7 +144,19 @@ export function renderFlashSaleView({
         }
       }
 
-      const reservation = inventory.reserve('demo-customer', 1);
+      const remainingSaleMs = saleEndsAt - Date.now();
+
+        if (remainingSaleMs <= 0) {
+        reserveButton.disabled = true;
+        status.textContent = 'The flash sale has ended.';
+        return;
+        }
+
+        const reservation = inventory.reserve(
+        'demo-customer',
+        1,
+        Math.min(5 * 60 * 1000, remainingSaleMs),
+        );
       currentReservationId = reservation.id;
 
       refreshStock();
