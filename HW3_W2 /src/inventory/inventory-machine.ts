@@ -16,7 +16,9 @@ export class InventoryMachine {
 
   constructor(initialStock: number) {
     if (!Number.isSafeInteger(initialStock) || initialStock < 0) {
-      throw new RangeError('Initial stock must be a non-negative safe integer.');
+      throw new RangeError(
+        'Initial stock must be a non-negative safe integer.',
+      );
     }
 
     this.stock = initialStock;
@@ -43,11 +45,11 @@ export class InventoryMachine {
       throw new RangeError('Reservation TTL must be a positive finite number.');
     }
 
+    this.expireDueReservations();
+
     if (quantity > this.stock) {
       throw new Error('Insufficient inventory.');
     }
-
-    this.stock -= quantity;
 
     const reservation: Reservation = {
       id: `reservation-${this.nextReservationId++}`,
@@ -57,11 +59,15 @@ export class InventoryMachine {
       status: 'reserved',
     };
 
+    this.stock -= quantity;
     this.reservations.set(reservation.id, reservation);
+
     return { ...reservation };
   }
 
   getReservation(id: string): Reservation | undefined {
+    this.expireDueReservations();
+
     const reservation = this.reservations.get(id);
     return reservation ? { ...reservation } : undefined;
   }
@@ -77,19 +83,27 @@ export class InventoryMachine {
     this.stock += reservation.quantity;
   }
 
+  expireDueReservations(now = Date.now()): void {
+    for (const reservation of this.reservations.values()) {
+      if (
+        reservation.status === 'reserved' &&
+        now >= reservation.expiresAt
+      ) {
+        reservation.status = 'expired';
+        this.stock += reservation.quantity;
+      }
+    }
+  }
+
   checkout(id: string): Reservation {
+    this.expireDueReservations();
+
     const reservation = this.requireReservation(id);
 
     if (reservation.status !== 'reserved') {
       throw new Error(
         `Cannot checkout a reservation with status "${reservation.status}".`,
       );
-    }
-
-    if (Date.now() >= reservation.expiresAt) {
-      reservation.status = 'expired';
-      this.stock += reservation.quantity;
-      throw new Error('Reservation has expired.');
     }
 
     reservation.status = 'checked-out';

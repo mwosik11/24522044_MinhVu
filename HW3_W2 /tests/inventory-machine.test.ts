@@ -86,4 +86,25 @@ describe('InventoryMachine', () => {
     expect(successes).toHaveLength(1);
     expect(inventory.availableStock).toBe(1);
   });
+
+
+    it('expires reservations whose deadlines have passed', () => {
+    const inventory = new InventoryMachine(5);
+    const reservation = inventory.reserve('customer-1', 2, 1_000);
+
+    inventory.expireDueReservations(reservation.expiresAt);
+
+    expect(inventory.getReservation(reservation.id)?.status).toBe('expired');
+    expect(inventory.availableStock).toBe(5);
+    });
+
+    it('does not release inventory twice when expiry is repeated', () => {
+    const inventory = new InventoryMachine(5);
+    const reservation = inventory.reserve('customer-1', 2, 1_000);
+
+    inventory.expireDueReservations(reservation.expiresAt);
+    inventory.expireDueReservations(reservation.expiresAt);
+
+    expect(inventory.availableStock).toBe(5);
+    });
 });
