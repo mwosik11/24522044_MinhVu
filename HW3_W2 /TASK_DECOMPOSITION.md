@@ -17,12 +17,12 @@
 - [x] T2.3 Implement animation scheduling with `requestAnimationFrame`.
 - [x] T2.4 Implement cancellation and cleanup.
 - [x] T2.5 Test timer initialization, ticking, completion, and disposal.
-- [ ] T2.6 Commit the timer implementation and tests.
+- [x] T2.6 Commit the timer implementation and tests.
 
 ### Milestone 3: Inventory State Machine
 
-- [ ] T3.1 Define inventory entities, reservation records, states, and events.
-- [ ] T3.2 Define valid and invalid state transitions.
+- [x] T3.1 Define inventory entities, reservation records, states, and events.
+- [x] T3.2 Define valid and invalid state transitions.
 - [ ] T3.3 Implement inventory reservation.
 - [ ] T3.4 Implement lock expiry and inventory release.
 - [ ] T3.5 Implement checkout and duplicate-operation protection.
