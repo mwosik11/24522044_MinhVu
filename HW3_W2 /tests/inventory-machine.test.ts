@@ -107,4 +107,46 @@ describe('InventoryMachine', () => {
 
     expect(inventory.availableStock).toBe(5);
     });
+
+
+it('never allows available stock to become negative', async () => {
+  const inventory = new InventoryMachine(10);
+
+  const results = await Promise.allSettled(
+    Array.from({ length: 20 }, (_, index) =>
+      Promise.resolve().then(() =>
+        inventory.reserve(`customer-${index}`, 1),
+      ),
+    ),
+  );
+
+  const successfulReservations = results.filter(
+    (result) => result.status === 'fulfilled',
+  );
+
+  expect(successfulReservations).toHaveLength(10);
+  expect(inventory.availableStock).toBe(0);
+  expect(inventory.availableStock).toBeGreaterThanOrEqual(0);
+});
+
+    it('does not restore inventory after a reservation is checked out', () => {
+    const inventory = new InventoryMachine(5);
+    const reservation = inventory.reserve('customer-1', 2);
+
+    inventory.checkout(reservation.id);
+    inventory.expireDueReservations(Number.MAX_SAFE_INTEGER);
+
+    expect(inventory.availableStock).toBe(3);
+    expect(inventory.getReservation(reservation.id)?.status).toBe('checked-out');
+    });
+
+    it('rejects duplicate checkout attempts', () => {
+    const inventory = new InventoryMachine(5);
+    const reservation = inventory.reserve('customer-1', 2);
+
+    inventory.checkout(reservation.id);
+
+    expect(() => inventory.checkout(reservation.id)).toThrow();
+    expect(inventory.availableStock).toBe(3);
+    });
 });
