@@ -1,4 +1,3 @@
-
 import type {
   AudioTask,
   AudioTaskListener,
@@ -13,25 +12,16 @@ export interface AudioQueueOptions {
 
 export interface AudioTaskQueue {
   enqueue(source: AudioTask['source']): string;
-
   cancel(taskId: string): boolean;
-
+  remove(taskId: string): boolean;
   getTaskState(taskId: string): AudioTaskState | undefined;
-  
   takeResult(taskId: string): AudioTaskResult | undefined;
-
   getPendingTaskIds(): readonly string[];
-
   getActiveTaskCount(): number;
-
   subscribe(listener: AudioTaskListener): () => void;
-
   dispose(): void;
 }
 
 export interface AudioTaskProcessor {
-  process(
-    task: AudioTask,
-    signal: AbortSignal,
-  ): Promise<AudioTaskResult>;
+  process(task: AudioTask, signal: AbortSignal): Promise<AudioTaskResult>;
 }

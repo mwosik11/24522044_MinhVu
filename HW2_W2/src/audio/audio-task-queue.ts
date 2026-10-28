@@ -123,6 +123,45 @@ export class FifoAudioTaskQueue implements AudioTaskQueue {
     return true;
   }
 
+  remove(taskId: string): boolean {
+    if (this.disposed) {
+      return false;
+    }
+
+    const item = this.tasks.get(taskId);
+
+    if (!item) {
+      return false;
+    }
+
+    const { status } = item.state;
+
+    // Cancel queued or processing work before removing its bookkeeping.
+    // A ready task is also cancelled so its AudioBuffer is released.
+    if (
+      status !== 'completed' &&
+      status !== 'failed' &&
+      status !== 'cancelled'
+    ) {
+      this.cancel(taskId);
+    } else {
+      item.controller.abort();
+    }
+
+    const pendingIndex = this.pending.findIndex(
+      (pendingItem) => pendingItem.task.id === taskId,
+    );
+
+    if (pendingIndex !== -1) {
+      this.pending.splice(pendingIndex, 1);
+    }
+
+    this.results.delete(taskId);
+    this.tasks.delete(taskId);
+
+    return true;
+  }
+
   getTaskState(taskId: string): AudioTaskState | undefined {
     const state = this.tasks.get(taskId)?.state;
 
