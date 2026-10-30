@@ -6,30 +6,30 @@
 
 - [x] Initialize React 19 + Vite.
 - [x] Install project dependencies.
-- [ ] Verify React, React DOM and Vite versions.
+- [x] Verify React, React DOM and Vite versions.
 
 ### M1 – Project Governance
 
-- [ ] Create project-rules.md.
-- [ ] Define coding standards and architectural constraints.
-- [ ] Define component responsibilities.
+- [x] Create project-rules.md.
+- [x] Define coding standards and architectural constraints.
+- [x] Define component responsibilities.
 
 ### M2 – Component Architecture
 
-- [ ] Define DeveloperCard props contract.
-- [ ] Define SkillBadge props contract.
-- [ ] Implement DeveloperCard.jsx.
-- [ ] Implement SkillBadge.jsx.
-- [ ] Implement semantic HTML structure.
-- [ ] Implement avatar fallback initials.
+- [x] Define DeveloperCard props contract.
+- [x] Define SkillBadge props contract.
+- [x] Implement DeveloperCard.jsx.
+- [x] Implement SkillBadge.jsx.
+- [x] Implement semantic HTML structure.
+- [x] Implement avatar fallback initials.
 
 ### M3 – Styling & Responsiveness
 
-- [ ] Create DeveloperCard.module.css.
-- [ ] Implement CSS Custom Properties.
-- [ ] Style DeveloperCard and SkillBadge.
-- [ ] Verify responsive layout at 375px.
-- [ ] Verify zero horizontal overflow.
+- [x] Create DeveloperCard.module.css.
+- [x] Implement CSS Custom Properties.
+- [x] Style DeveloperCard and SkillBadge.
+- [x] Verify responsive layout at 375px.
+- [x] Verify zero horizontal overflow.
 
 ### M4 – Verification
 
