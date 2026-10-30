@@ -33,15 +33,15 @@
 
 ### M4 – Verification
 
-- [ ] Verify zero div elements in DeveloperCard.jsx.
-- [ ] Verify HTTPS-only avatar URL.
-- [ ] Verify image width and height.
-- [ ] Verify semantic Accessibility Tree.
-- [ ] Verify all skill and metric data render correctly.
+- [x] Verify zero div elements in DeveloperCard.jsx.
+- [x] Verify HTTPS-only avatar URL.
+- [x] Verify image width and height.
+- [x] Verify semantic Accessibility Tree.
+- [x] Verify all skill and metric data render correctly.
 
 ### M5 – Git & Final Audit
 
-- [ ] Commit semantic components.
-- [ ] Commit responsive CSS module.
-- [ ] Verify Git history against requirements.
-- [ ] Complete final Exercise 1 audit.
+- [x] Commit semantic components.
+- [x] Commit responsive CSS module.
+- [x] Verify Git history against requirements.
+- [x] Complete final Exercise 1 audit.
