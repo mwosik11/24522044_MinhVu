@@ -1,4 +1,5 @@
-import { useId, useState } from 'react';
+
+import { useEffect, useId, useRef, useState } from 'react';
 import { SMART_PEOPLE } from '../data/smartPeople';
 
 function getInitials(name) {
@@ -13,19 +14,22 @@ function getInitials(name) {
 export function ScientistDirectory({
   initialData = SMART_PEOPLE,
 }) {
-  // Generate unique IDs for accessible form controls
   const qId = useId();
   const iqId = useId();
   const sortId = useId();
 
-  // Independent state
   const [people, setPeople] = useState(initialData);
   const [query, setQuery] = useState('');
   const [minIq, setMinIq] = useState(160);
   const [sortBy, setSortBy] = useState('iq-desc');
 
-  // Derived data: filter and sort during rendering
-  // No useEffect and no additional state for visible records
+  // Used only to restore keyboard focus after deleting a profile.
+  const [focusTargetId, setFocusTargetId] = useState(null);
+  const deleteButtonRefs = useRef({});
+  const resetButtonRef = useRef(null);
+
+  // Derived data: filter and sort during rendering.
+  // No useEffect is used for filtering or sorting.
   const normalizedQuery = query.trim().toLowerCase();
 
   const visible = people
@@ -40,7 +44,44 @@ export function ScientistDirectory({
         : a.age - b.age
     );
 
-  // Calculate collection statistics
+  // Restore focus after the deleted card has been removed.
+  useEffect(() => {
+    if (focusTargetId === null) return;
+
+    if (focusTargetId === '__reset__') {
+      resetButtonRef.current?.focus();
+    } else {
+      deleteButtonRefs.current[focusTargetId]?.focus();
+    }
+
+    setFocusTargetId(null);
+  }, [people, focusTargetId]);
+
+  // Delete one person using an immutable state update.
+  function handleDelete(id) {
+    const currentIndex = visible.findIndex(
+      (person) => person.id === id
+    );
+
+    const nextPerson =
+      visible[currentIndex + 1] ?? visible[currentIndex - 1];
+
+    setFocusTargetId(nextPerson?.id ?? '__reset__');
+
+    setPeople((previousPeople) =>
+      previousPeople.filter((person) => person.id !== id)
+    );
+  }
+
+  // Restore the original collection and default filters.
+  function handleReset() {
+    setPeople(SMART_PEOPLE);
+    setQuery('');
+    setMinIq(160);
+    setSortBy('iq-desc');
+    setFocusTargetId(null);
+  }
+
   const highestIq = people.length
     ? Math.max(...people.map((person) => person.iq))
     : 0;
@@ -55,19 +96,9 @@ export function ScientistDirectory({
     <div className="directory-page">
 
       {/* Navigation */}
-      <nav
-        className="topbar"
-        aria-label="Main navigation"
-      >
-        <a
-          className="brand"
-          href="#top"
-          aria-label="Mind Atlas home"
-        >
-          <span
-            className="brand-mark"
-            aria-hidden="true"
-          >
+      <nav className="topbar" aria-label="Main navigation">
+        <a className="brand" href="#top" aria-label="Mind Atlas home">
+          <span className="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 32 32" fill="none">
               <path
                 d="M16 3.5 28.5 16 16 28.5 3.5 16 16 3.5Z"
@@ -81,7 +112,6 @@ export function ScientistDirectory({
               />
             </svg>
           </span>
-
           <span className="brand-name">
             MIND<span>ATLAS</span>
           </span>
@@ -91,20 +121,14 @@ export function ScientistDirectory({
           <span className="topbar-caption">
             A FIELD GUIDE TO EXTRAORDINARY MINDS
           </span>
-
           <span className="edition-pill">
-            EDITION 01
-            <span aria-hidden="true">↗</span>
+            EDITION 01 <span aria-hidden="true">↗</span>
           </span>
         </div>
       </nav>
 
-      {/* Hero section */}
-      <section
-        className="hero-panel"
-        id="top"
-        aria-labelledby="hero-title"
-      >
+      {/* Hero */}
+      <section className="hero-panel" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">
             <span className="eyebrow-line" />
@@ -125,32 +149,21 @@ export function ScientistDirectory({
 
           <div className="hero-footnote">
             <span className="footnote-index">01</span>
-            <span>
-              Explore the people behind the progress.
-            </span>
+            <span>Explore the people behind the progress.</span>
           </div>
         </div>
 
-        {/* Decorative orbital artwork */}
-        <div
-          className="hero-art"
-          aria-hidden="true"
-        >
+        <div className="hero-art" aria-hidden="true">
           <div className="orbit orbit-one" />
           <div className="orbit orbit-two" />
           <div className="orbit orbit-three" />
-
           <span className="orbit-dot dot-one" />
           <span className="orbit-dot dot-two" />
           <span className="orbit-dot dot-three" />
 
           <div className="hero-seal">
-            <span className="seal-overline">
-              EST.
-            </span>
-
+            <span className="seal-overline">EST.</span>
             <strong>∞</strong>
-
             <span className="seal-caption">
               HUMAN
               <br />
@@ -163,91 +176,48 @@ export function ScientistDirectory({
         </div>
 
         <div className="hero-bottomline">
+          <span>SCIENCE · KNOWLEDGE · LEGACY</span>
           <span>
-            SCIENCE · KNOWLEDGE · LEGACY
-          </span>
-
-          <span>
-            CURATED PROFILES
-            <b>—</b>
-            001–{String(people.length).padStart(3, '0')}
+            CURATED PROFILES <b>—</b> 001–
+            {String(people.length).padStart(3, '0')}
           </span>
         </div>
       </section>
 
       {/* Statistics */}
-      <section
-        className="stats-strip"
-        aria-label="Directory overview"
-      >
+      <section className="stats-strip" aria-label="Directory overview">
         <div className="stat-item">
-          <span className="stat-label">
-            ARCHIVE SIZE
-          </span>
-
-          <strong>
-            {String(people.length).padStart(2, '0')}
-          </strong>
-
-          <span className="stat-detail">
-            pioneer profiles
-          </span>
+          <span className="stat-label">ARCHIVE SIZE</span>
+          <strong>{String(people.length).padStart(2, '0')}</strong>
+          <span className="stat-detail">pioneer profiles</span>
         </div>
 
         <div className="stat-item">
-          <span className="stat-label">
-            CURRENT VIEW
-          </span>
-
-          <strong>
-            {String(visible.length).padStart(2, '0')}
-          </strong>
-
-          <span className="stat-detail">
-            matching profiles
-          </span>
+          <span className="stat-label">CURRENT VIEW</span>
+          <strong>{String(visible.length).padStart(2, '0')}</strong>
+          <span className="stat-detail">matching profiles</span>
         </div>
 
         <div className="stat-item">
-          <span className="stat-label">
-            HIGHEST IQ
-          </span>
-
-          <strong>
-            {highestIq || '—'}
-          </strong>
-
-          <span className="stat-detail">
-            in this collection
-          </span>
+          <span className="stat-label">HIGHEST IQ</span>
+          <strong>{highestIq || '—'}</strong>
+          <span className="stat-detail">in this collection</span>
         </div>
 
         <div className="stat-item stat-item-last">
-          <span className="stat-label">
-            AGE RANGE
-          </span>
-
-          <strong>
-            {ageRange}
-          </strong>
-
-          <span className="stat-detail">
-            years represented
-          </span>
+          <span className="stat-label">AGE RANGE</span>
+          <strong>{ageRange}</strong>
+          <span className="stat-detail">years represented</span>
         </div>
       </section>
 
       {/* Directory */}
-      <section
-        className="archive-section"
-        aria-labelledby="archive-title"
-      >
+      <section className="archive-section" aria-labelledby="archive-title">
         <div className="section-heading">
           <div>
             <p className="eyebrow section-eyebrow">
               DISCOVER THE ARCHIVE
             </p>
-
             <h2 id="archive-title">
               Meet the pioneers<span>.</span>
             </h2>
@@ -266,9 +236,7 @@ export function ScientistDirectory({
           onSubmit={(event) => event.preventDefault()}
         >
           <div className="filter-field search-field">
-            <label htmlFor={qId}>
-              SEARCH THE ARCHIVE
-            </label>
+            <label htmlFor={qId}>SEARCH THE ARCHIVE</label>
 
             <div className="input-wrap">
               <svg
@@ -284,7 +252,6 @@ export function ScientistDirectory({
                   stroke="currentColor"
                   strokeWidth="1.7"
                 />
-
                 <path
                   d="m16 16 4.5 4.5"
                   stroke="currentColor"
@@ -297,9 +264,7 @@ export function ScientistDirectory({
                 id={qId}
                 type="search"
                 value={query}
-                onChange={(event) =>
-                  setQuery(event.target.value)
-                }
+                onChange={(event) => setQuery(event.target.value)}
                 placeholder="Try ‘Einstein’ or ‘Newton’"
                 autoComplete="off"
               />
@@ -307,9 +272,7 @@ export function ScientistDirectory({
           </div>
 
           <div className="filter-field compact-field">
-            <label htmlFor={iqId}>
-              MINIMUM IQ
-            </label>
+            <label htmlFor={iqId}>MINIMUM IQ</label>
 
             <div className="input-wrap number-wrap">
               <input
@@ -319,39 +282,24 @@ export function ScientistDirectory({
                 value={minIq}
                 onChange={(event) => {
                   const value = event.target.valueAsNumber;
-
-                  setMinIq(
-                    Number.isNaN(value) ? 0 : value
-                  );
+                  setMinIq(Number.isNaN(value) ? 0 : value);
                 }}
               />
-
-              <span className="field-suffix">
-                IQ
-              </span>
+              <span className="field-suffix">IQ</span>
             </div>
           </div>
 
           <div className="filter-field sort-field">
-            <label htmlFor={sortId}>
-              SORT COLLECTION
-            </label>
+            <label htmlFor={sortId}>SORT COLLECTION</label>
 
             <div className="input-wrap select-wrap">
               <select
                 id={sortId}
                 value={sortBy}
-                onChange={(event) =>
-                  setSortBy(event.target.value)
-                }
+                onChange={(event) => setSortBy(event.target.value)}
               >
-                <option value="iq-desc">
-                  Highest IQ first
-                </option>
-
-                <option value="age-asc">
-                  Youngest age first
-                </option>
+                <option value="iq-desc">Highest IQ first</option>
+                <option value="age-asc">Youngest age first</option>
               </select>
 
               <svg
@@ -372,38 +320,45 @@ export function ScientistDirectory({
           </div>
         </form>
 
-        {/* Results heading */}
+        {/* Results heading and Reset */}
         <div className="results-heading">
           <div className="results-title-group">
             <span className="results-marker" />
-
             <h3>THE DIRECTORY</h3>
-
             <span className="results-divider" />
 
-            <span className="results-total">
-              {String(visible.length).padStart(2, '0')}
-              {' '}PROFILES
-            </span>
+            <output
+              className="results-total"
+              role="status"
+              aria-live="polite"
+            >
+              {String(visible.length).padStart(2, '0')} PROFILES
+            </output>
           </div>
 
-          <p className="results-order">
-            {sortBy === 'iq-desc'
-              ? 'ORDERED BY IQ'
-              : 'ORDERED BY AGE'}
+          <div className="results-actions">
+            <p className="results-order">
+              {sortBy === 'iq-desc' ? 'ORDERED BY IQ' : 'ORDERED BY AGE'}
+              <span aria-hidden="true"> ↗</span>
+            </p>
 
-            <span aria-hidden="true"> ↗</span>
-          </p>
+            <button
+              ref={resetButtonRef}
+              className="reset-button"
+              type="button"
+              onClick={handleReset}
+            >
+              <span aria-hidden="true">↺</span>
+              Reset
+            </button>
+          </div>
         </div>
 
         {/* Scientist cards */}
         {visible.length > 0 ? (
           <ul className="people-grid">
             {visible.map((person) => (
-              <li
-                className="person-card"
-                key={person.id}
-              >
+              <li className="person-card" key={person.id}>
                 <div className="card-topline">
                   <span className="profile-number">
                     PROFILE /{' '}
@@ -413,25 +368,31 @@ export function ScientistDirectory({
                       .padStart(2, '0')}
                   </span>
 
-                  <span
-                    className="profile-symbol"
-                    aria-hidden="true"
+                  <button
+                    ref={(node) => {
+                      if (node) {
+                        deleteButtonRefs.current[person.id] = node;
+                      } else {
+                        deleteButtonRefs.current[person.id] = null;
+                      }
+                    }}
+                    className="delete-button"
+                    type="button"
+                    aria-label={`Delete ${person.name}`}
+                    onClick={() => handleDelete(person.id)}
+                    title={`Delete ${person.name}`}
                   >
-                    ↗
-                  </span>
+                    <span aria-hidden="true">×</span>
+                  </button>
                 </div>
 
                 <div className="person-identity">
-                  <div
-                    className="person-avatar"
-                    aria-hidden="true"
-                  >
+                  <div className="person-avatar" aria-hidden="true">
                     {getInitials(person.name)}
                   </div>
 
                   <div className="person-name-wrap">
                     <h4>{person.name}</h4>
-
                     <span className="person-role">
                       SCIENTIFIC PIONEER
                     </span>
@@ -443,7 +404,6 @@ export function ScientistDirectory({
                     <span className="metric-label">
                       INTELLIGENCE QUOTIENT
                     </span>
-
                     <strong>
                       {person.iq}
                       <small> IQ</small>
@@ -468,14 +428,9 @@ export function ScientistDirectory({
                 </div>
 
                 <div className="card-footer">
-                  <span className="metric-label">
-                    AGE
-                  </span>
-
+                  <span className="metric-label">AGE</span>
                   <strong>
-                    {person.age}
-                    {' '}
-                    <small>YEARS</small>
+                    {person.age} <small>YEARS</small>
                   </strong>
                 </div>
               </li>
@@ -483,15 +438,8 @@ export function ScientistDirectory({
           </ul>
         ) : (
           <div className="empty-state">
-            <span
-              className="empty-mark"
-              aria-hidden="true"
-            >
-              ⌕
-            </span>
-
+            <span className="empty-mark" aria-hidden="true">⌕</span>
             <h4>No profiles found</h4>
-
             <p>
               Try another name or lower the minimum IQ threshold.
             </p>
@@ -501,10 +449,7 @@ export function ScientistDirectory({
 
       {/* Footer */}
       <footer className="page-footer">
-        <a
-          className="footer-brand"
-          href="#top"
-        >
+        <a className="footer-brand" href="#top">
           MIND<span>ATLAS</span>
         </a>
 

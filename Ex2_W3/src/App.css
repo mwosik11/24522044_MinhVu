@@ -1034,3 +1034,83 @@
     animation-iteration-count: 1 !important;
   }
 }
+
+
+/* =========================================
+   M4: DELETE AND RESET CONTROLS
+========================================= */
+
+.results-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.reset-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border: 1px solid #dce3da;
+  border-radius: 3px;
+  color: #496c53;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.reset-button:hover {
+  border-color: #8ca88f;
+  color: #244c34;
+  background: #f1f5ef;
+}
+
+.reset-button span {
+  font-size: 15px;
+}
+
+.delete-button {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #e8e9e3;
+  border-radius: 50%;
+  color: #9b756d;
+  background: #fff;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.delete-button span {
+  font-size: 19px;
+  line-height: 1;
+}
+
+.delete-button:hover {
+  border-color: #d7a49b;
+  color: #a33d32;
+  background: #fff4f1;
+}
+
+.reset-button:focus-visible,
+.delete-button:focus-visible {
+  outline: 2px solid #4f805f;
+  outline-offset: 3px;
+}
+
+@media (max-width: 620px) {
+  .results-actions {
+    gap: 8px;
+  }
+
+  .reset-button {
+    padding: 6px 8px;
+  }
+
+  .results-order {
+    font-size: 7px;
+  }
+}
