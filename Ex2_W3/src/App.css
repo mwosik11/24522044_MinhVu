@@ -1114,3 +1114,46 @@
     font-size: 7px;
   }
 }
+
+
+/* =========================================
+   ACCESSIBILITY: COLOR CONTRAST IMPROVEMENT
+========================================= */
+
+/* Secondary text on light backgrounds */
+.topbar-caption,
+.stat-label,
+.stat-detail,
+.section-intro,
+.filter-field label,
+.input-wrap input::placeholder,
+.field-suffix,
+.results-total,
+.results-order,
+.profile-number,
+.person-role,
+.metric-label,
+.iq-heading small,
+.card-footer strong small,
+.page-footer > span,
+.empty-state p {
+  color: var(--muted-text);
+}
+
+/* Section eyebrow uses accessible green */
+.section-eyebrow {
+  color: var(--green);
+}
+
+/* Improve visibility of secondary visual indicators */
+.profile-symbol,
+.field-icon,
+.select-chevron,
+.empty-mark {
+  color: var(--muted-text);
+}
+
+/* Delete control */
+.delete-button {
+  color: #865f56;
+}
