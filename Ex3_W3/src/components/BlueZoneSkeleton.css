@@ -1,33 +1,74 @@
 
 .blue-zone-skeleton {
+  --skeleton-base: #1a2b42;
+  --skeleton-highlight: #2a4664;
+
   box-sizing: border-box;
-  height: 220px;
   width: 100%;
-  padding: 24px;
-  border: 1px solid #3678b9;
-  border-radius: 12px;
-  background: #101e33;
-  animation: blue-zone-pulse 1.5s ease-in-out infinite;
+  height: 220px;
+  overflow: hidden;
+  padding: 20px 22px;
+  border: 1px solid rgba(88, 183, 255, 0.22);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #111f32, #0d192a);
+  animation: blue-zone-pulse 1.6s ease-in-out infinite;
 }
 
-.skeleton-line {
-  height: 16px;
+.blue-zone-skeleton__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 20px;
+}
+
+.skeleton-line,
+.skeleton-metric {
+  display: block;
   border-radius: 6px;
-  background: #345b83;
+  background: linear-gradient(
+    100deg,
+    var(--skeleton-base) 20%,
+    var(--skeleton-highlight) 48%,
+    var(--skeleton-base) 76%
+  );
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.8s linear infinite;
 }
 
-.skeleton-title {
-  width: 70%;
-  height: 24px;
+.skeleton-line--label {
+  width: 112px;
+  height: 9px;
 }
 
-.skeleton-medium {
-  width: 55%;
+.skeleton-line--badge {
+  width: 94px;
+  height: 25px;
+  border-radius: 5px;
 }
 
-.skeleton-short {
-  width: 35%;
+.skeleton-line--title {
+  width: min(42%, 280px);
+  height: 23px;
+  margin-bottom: 10px;
+}
+
+.skeleton-line--subtitle {
+  width: min(28%, 180px);
+  height: 10px;
+}
+
+.blue-zone-skeleton__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 23px;
+}
+
+.skeleton-metric {
+  height: 54px;
+  border: 1px solid rgba(130, 174, 211, 0.06);
+  border-radius: 8px;
 }
 
 @keyframes blue-zone-pulse {
@@ -36,13 +77,39 @@
   }
 
   50% {
-    opacity: 0.5;
+    opacity: 0.78;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -120% 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .blue-zone-skeleton {
+    padding: 17px 14px;
+  }
+
+  .blue-zone-skeleton__metrics {
+    gap: 7px;
+    margin-top: 25px;
+  }
+
+  .skeleton-metric {
+    height: 49px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .blue-zone-skeleton {
+  .blue-zone-skeleton,
+  .skeleton-line,
+  .skeleton-metric {
     animation: none;
   }
 }
-

@@ -8,10 +8,22 @@ export default function BlueZoneSkeleton() {
       aria-busy="true"
       aria-label="Loading PUBG match telemetry"
     >
-      <div className="skeleton-line skeleton-title" />
-      <div className="skeleton-line skeleton-medium" />
-      <div className="skeleton-line skeleton-short" />
-      <div className="skeleton-line skeleton-medium" />
+      <header className="blue-zone-skeleton__header">
+        <span className="skeleton-line skeleton-line--label" />
+        <span className="skeleton-line skeleton-line--badge" />
+      </header>
+
+      <span className="skeleton-line skeleton-line--title" />
+      <span className="skeleton-line skeleton-line--subtitle" />
+
+      <section
+        className="blue-zone-skeleton__metrics"
+        aria-hidden="true"
+      >
+        <span className="skeleton-metric" />
+        <span className="skeleton-metric" />
+        <span className="skeleton-metric" />
+      </section>
     </section>
   );
 }
