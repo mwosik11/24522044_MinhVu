@@ -1,51 +1,30 @@
 
-import { PUBG_VN_SQUADS } from '../data/pubg-vn-telemetry-spec.js';
-
 /**
- * Simulate a KRAFTON PUBG VN telemetry request.
+ * Fetch simulated KRAFTON PUBG VN telemetry.
  *
  * @param {string} squadId
  * @param {{ signal: AbortSignal }} options
  * @returns {Promise<object>}
  */
-export function fetchKraftonPubgTelemetry(
+export async function fetchKraftonPubgTelemetry(
   squadId,
   { signal },
 ) {
-  return new Promise((resolve, reject) => {
-    if (signal.aborted) {
-      reject(new DOMException('Request aborted', 'AbortError'));
-      return;
-    }
+  const response = await fetch(
+    `/api/telemetry/${encodeURIComponent(squadId)}`,
+    {
+      method: 'GET',
+      signal,
+    },
+  );
 
-    const squad = PUBG_VN_SQUADS.find(
-      (item) => item.id === squadId,
+  const payload = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      payload.message || 'Satellite telemetry request failed.',
     );
+  }
 
-    if (!squad) {
-      reject(new Error(`Unknown squad ID: ${squadId}`));
-      return;
-    }
-
-    const timeoutId = setTimeout(() => {
-      signal.removeEventListener('abort', handleAbort);
-
-      // Simulate 35% satellite packet loss.
-      if (Math.random() < 0.35) {
-        reject(new Error('Satellite packet timeout. Please reconnect.'));
-        return;
-      }
-
-      resolve({ ...squad });
-    }, 2500);
-
-    function handleAbort() {
-      clearTimeout(timeoutId);
-      reject(new DOMException('Request aborted', 'AbortError'));
-    }
-
-    signal.addEventListener('abort', handleAbort, {
-      once: true,
-    });
-  });
+  return payload;
 }
