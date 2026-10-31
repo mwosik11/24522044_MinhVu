@@ -1,0 +1,48 @@
+
+.blue-zone-skeleton {
+  box-sizing: border-box;
+  height: 220px;
+  width: 100%;
+  padding: 24px;
+  border: 1px solid #3678b9;
+  border-radius: 12px;
+  background: #101e33;
+  animation: blue-zone-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 16px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  background: #345b83;
+}
+
+.skeleton-title {
+  width: 70%;
+  height: 24px;
+}
+
+.skeleton-medium {
+  width: 55%;
+}
+
+.skeleton-short {
+  width: 35%;
+}
+
+@keyframes blue-zone-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blue-zone-skeleton {
+    animation: none;
+  }
+}
+
