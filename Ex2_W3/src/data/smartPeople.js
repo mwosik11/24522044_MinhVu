@@ -1,32 +1,8 @@
 export const SMART_PEOPLE = [
-  {
-    id: "p001",
-    name: "Johann Goethe",
-    iq: 210,
-    age: 82,
-  },
-  {
-    id: "p002",
-    name: "Albert Einstein",
-    iq: 160,
-    age: 76,
-  },
-  {
-    id: "p003",
-    name: "Leonardo da Vinci",
-    iq: 180,
-    age: 67,
-  },
-  {
-    id: "p004",
-    name: "Isaac Newton",
-    iq: 190,
-    age: 84,
-  },
-  {
-    id: "p005",
-    name: "James Clerk Maxwell",
-    iq: 180,
-    age: 48,
-  },
+  { id: 'sp-1', name: 'Johann Goethe', age: 82, iq: 210 },
+  { id: 'sp-2', name: 'Albert Einstein', age: 76, iq: 205 },
+  { id: 'sp-3', name: 'Leonardo da Vinci', age: 67, iq: 180 },
+  { id: 'sp-4', name: 'Isaac Newton', age: 84, iq: 190 },
+  { id: 'sp-5', name: 'James Maxwell', age: 48, iq: 190 },
+  { id: 'sp-6', name: 'William Sidis', age: 46, iq: 200 },
 ];
