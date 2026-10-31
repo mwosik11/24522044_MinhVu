@@ -12,16 +12,16 @@
 
 ### M1 – Project Documentation
 
-- [ ] Create project-rules.md.
-- [ ] Create TASK_DECOMPOSITION.md.
-- [ ] Review project structure and requirements.
+- [x] Create project-rules.md.
+- [x] Create TASK_DECOMPOSITION.md.
+- [x] Review project structure and requirements.
 
 ### M2 – Data Schema and Stable IDs
 
-- [ ] Define the SMART_PEOPLE dataset.
-- [ ] Normalize the scientist data schema.
-- [ ] Assign stable, unique IDs to all records.
-- [ ] Verify data consistency.
+- [x] Define the SMART_PEOPLE dataset.
+- [x] Normalize the scientist data schema.
+- [x] Assign stable, unique IDs to all records.
+- [x] Verify data consistency.
 
 **Required commit:**
 `feat(ex2): normalize smartPeople schema with stable IDs`
