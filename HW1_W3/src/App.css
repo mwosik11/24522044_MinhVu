@@ -344,3 +344,38 @@
   font-size: 10px;
   font-weight: 700;
 }
+
+/* Accessibility: improve text contrast */
+
+.audio-meter {
+  color: #e5e7eb;
+}
+
+.audio-meter span {
+  color: #e5e7eb;
+}
+
+.hit-log {
+  color: #e5e7eb;
+}
+
+.hit-log__empty {
+  color: #d1d5db;
+}
+
+p {
+  color: #d1d5db;
+}
+/* Accessibility: WCAG text contrast improvements */
+
+.audio-meter__scale {
+  color: #bdbdbd;
+}
+
+.hit-log__empty {
+  color: #bdbdbd;
+}
+
+.studio__footer {
+  color: #bdbdbd;
+}
