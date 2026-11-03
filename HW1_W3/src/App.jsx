@@ -20,7 +20,7 @@ import "./App.css";
 function App() {
   const [hitLog, setHitLog] = useState([]);
   const [pressedPads, setPressedPads] = useState([]);
-  const [audioLevel, setAudioLevel] = useState(0);
+  const [audioLevel, setAudioLevel] = useState(-60);
 
   const timeoutRefs = useRef(new Map());
   const analyserRef = useRef(null);
@@ -181,7 +181,7 @@ useEffect(() => {
   // Monitor real-time audio levels.
 useEffect(() => {
   let isActive = true;
-  const frequencyData = new Uint8Array(128);
+  const timeDomainData = new Float32Array(2048);
 
   const updateAudioLevel = () => {
     if (!isActive) return;
@@ -189,21 +189,28 @@ useEffect(() => {
     const analyser = getAudioAnalyser();
 
     if (!analyser) {
-      setAudioLevel(0);
+      setAudioLevel(-60);
       animationFrameRef.current =
         requestAnimationFrame(updateAudioLevel);
       return;
     }
 
     analyserRef.current = analyser;
+    analyser.getFloatTimeDomainData(timeDomainData);
 
-    analyser.getByteFrequencyData(frequencyData);
+    const sumOfSquares = timeDomainData.reduce(
+      (sum, sample) => sum + sample * sample,
+      0
+    );
+  
+    const rms = Math.sqrt(
+      sumOfSquares / timeDomainData.length
+    );
 
-    const average =
-      frequencyData.reduce((sum, value) => sum + value, 0) /
-      frequencyData.length;
+    const dbfs =
+      rms > 0 ? 20 * Math.log10(rms) : -60;
 
-    setAudioLevel(Math.min(100, Math.round((average / 255) * 100)));
+    setAudioLevel(Math.max(-60, Math.min(0, dbfs)));
 
     animationFrameRef.current =
       requestAnimationFrame(updateAudioLevel);
@@ -288,28 +295,30 @@ useEffect(() => {
         </div>
 
         <span className="audio-meter__value">
-          {audioLevel}%
+          {audioLevel.toFixed(1)} dBFS
         </span>
       </div>
 
       <div
         className="audio-meter__track"
         role="meter"
-        aria-label="Audio level"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={audioLevel}
+        aria-label="Audio signal level in dBFS"
+        aria-valuemin={-60}
+        aria-valuemax={0}
+        aria-valuenow={Number(audioLevel.toFixed(1))}
       >
         <div
           className="audio-meter__fill"
-          style={{ width: `${audioLevel}%` }}
+          style={{
+            width: `${((audioLevel + 60) / 60) * 100}%`,
+          }}
         />
       </div>
 
       <div className="audio-meter__scale">
-        <span>LOW</span>
-        <span>MEDIUM</span>
-        <span>HIGH</span>
+        <span>-60 dBFS</span>
+        <span>-30 dBFS</span>
+        <span>0 dBFS</span>
       </div>
     </section>
 

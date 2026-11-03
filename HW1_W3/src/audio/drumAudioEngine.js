@@ -21,7 +21,8 @@ const getAudioContext = () => {
   masterGain.gain.value = 0.7;
 
   analyser = audioContext.createAnalyser();
-  analyser.fftSize = 256;
+  analyser.fftSize = 2048;
+  analyser.smoothingTimeConstant = 0.8;
 
   masterGain.connect(analyser);
   analyser.connect(audioContext.destination);
