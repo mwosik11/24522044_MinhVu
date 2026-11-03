@@ -17,6 +17,7 @@ import {
 import "./App.css";
 
 function App() {
+  const [hitLog, setHitLog] = useState([]);
   const [pressedPads, setPressedPads] = useState([]);
   const timeoutRefs = useRef(new Map());
 
@@ -38,7 +39,22 @@ function App() {
   
 const handlePadTrigger = useCallback(
   async (pad, autoRelease = true) => {
-    await playDrumSound(pad.soundType);
+    const played = await playDrumSound(pad.soundType);
+    if (!played){
+      return; 
+    }
+    const hit = {
+      id: `${Date.now()}-${Math.random()}`,
+      label: pad.label,
+      key: pad.key,
+      time: new Date().toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    }),
+};
+
+setHitLog((currentLog) => [hit, ...currentLog].slice(0, 8));
 
     const existingTimer = timeoutRefs.current.get(pad.id);
 
@@ -216,6 +232,50 @@ useEffect(() => {
           ))}
         </div>
       </section>
+
+
+<section className="hit-log" aria-labelledby="hit-log-title">
+  <div className="hit-log__heading">
+    <div>
+      <h2 id="hit-log-title">Recent Hits</h2>
+      <p>Latest drum pad interactions</p>
+    </div>
+
+    <span className="hit-log__count">
+      {hitLog.length} / 8
+    </span>
+  </div>
+
+  <output
+    className="hit-log__output"
+    aria-live="polite"
+    aria-relevant="additions"
+    aria-label="Recent drum pad hits"
+  >
+    {hitLog.length === 0 ? (
+      <span className="hit-log__empty">
+        No hits yet. Play a drum pad to get started.
+      </span>
+    ) : (
+      hitLog.map((hit) => (
+        <span className="hit-log__entry" key={hit.id}>
+          <span className="hit-log__entry-key">
+            {hit.key}
+          </span>
+
+          <span className="hit-log__entry-label">
+            {hit.label}
+          </span>
+
+          <time className="hit-log__entry-time">
+            {hit.time}
+          </time>
+        </span>
+      ))
+    )}
+  </output>
+</section>
+
 
       <footer className="studio__footer">
         <p>REACT 19 · WEB AUDIO API</p>
