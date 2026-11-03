@@ -1,29 +1,52 @@
 
-import { useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import DrumPad from "./components/DrumPad";
 import { DRUM_PADS } from "./data/drumPads";
+
 import {
   disposeAudio,
   playDrumSound,
 } from "./audio/drumAudioEngine";
+
 import "./App.css";
 
 function App() {
   const [pressedPads, setPressedPads] = useState([]);
   const timeoutRefs = useRef(new Map());
 
-  const handlePadTrigger = async (pad) => {
-    // Play the corresponding drum sound.
+  // Clear the visual pressed state of one pad.
+  const releasePad = useCallback((padId) => {
+    const timer = timeoutRefs.current.get(padId);
+
+    if (timer) {
+      clearTimeout(timer);
+      timeoutRefs.current.delete(padId);
+    }
+
+    setPressedPads((currentPads) =>
+      currentPads.filter((id) => id !== padId)
+    );
+  }, []);
+
+  // Play a drum sound and update its visual state.
+  
+const handlePadTrigger = useCallback(
+  async (pad, autoRelease = true) => {
     await playDrumSound(pad.soundType);
 
-    // Clear an existing release timer for this pad.
     const existingTimer = timeoutRefs.current.get(pad.id);
 
     if (existingTimer) {
       clearTimeout(existingTimer);
+      timeoutRefs.current.delete(pad.id);
     }
 
-    // Mark the pad as pressed.
     setPressedPads((currentPads) => {
       if (currentPads.includes(pad.id)) {
         return currentPads;
@@ -32,28 +55,86 @@ function App() {
       return [...currentPads, pad.id];
     });
 
-    // Release the pad after a short visual feedback interval.
-    const timer = setTimeout(() => {
-      setPressedPads((currentPads) =>
-        currentPads.filter((id) => id !== pad.id)
+    if (autoRelease) {
+      const timer = setTimeout(() => {
+        setPressedPads((currentPads) =>
+          currentPads.filter((id) => id !== pad.id)
+        );
+
+        timeoutRefs.current.delete(pad.id);
+      }, 120);
+
+      timeoutRefs.current.set(pad.id, timer);
+    }
+  },
+  []
+);
+
+
+  // Handle physical keyboard interaction.
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Ignore repeated keydown events while a key is held.
+      if (event.repeat) {
+        return;
+      }
+
+      const target = event.target;
+
+      // Do not trigger drum pads while typing in form controls.
+      const isTyping =
+        target instanceof HTMLElement &&
+        (
+          target.matches("input, textarea, select") ||
+          target.isContentEditable
+        );
+
+      if (isTyping) {
+        return;
+      }
+
+      const pad = DRUM_PADS.find(
+        (item) => item.code === event.code
       );
 
-      timeoutRefs.current.delete(pad.id);
-    }, 120);
+      if (!pad) {
+        return;
+      }
 
-    timeoutRefs.current.set(pad.id, timer);
-  };
+      event.preventDefault();
+      void handlePadTrigger(pad, false);
+    };
 
+    const handleKeyUp = (event) => {
+      const pad = DRUM_PADS.find(
+        (item) => item.code === event.code
+      );
+
+      if (!pad) {
+        return;
+      }
+
+      releasePad(pad.id);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [handlePadTrigger, releasePad]);
+
+  // Clean up timers and audio resources on unmount.
   useEffect(() => {
     return () => {
-      // Clear all pending visual release timers.
       timeoutRefs.current.forEach((timer) => {
         clearTimeout(timer);
       });
 
       timeoutRefs.current.clear();
 
-      // Release the Web Audio resources.
       void disposeAudio();
     };
   }, []);
@@ -82,7 +163,9 @@ function App() {
         <div className="drum-machine__heading">
           <div>
             <h2>Drum Pads</h2>
-            <p>Click a pad to play its sound.</p>
+            <p>
+              Click a pad or press W, A, S, D, J, K, L.
+            </p>
           </div>
 
           <span className="drum-machine__count">
