@@ -11,6 +11,7 @@ import { DRUM_PADS } from "./data/drumPads";
 
 import {
   disposeAudio,
+  getAudioAnalyser,
   playDrumSound,
 } from "./audio/drumAudioEngine";
 
@@ -19,7 +20,11 @@ import "./App.css";
 function App() {
   const [hitLog, setHitLog] = useState([]);
   const [pressedPads, setPressedPads] = useState([]);
+  const [audioLevel, setAudioLevel] = useState(0);
+
   const timeoutRefs = useRef(new Map());
+  const analyserRef = useRef(null);
+  const animationFrameRef = useRef(null);
 
   // Clear the visual pressed state of one pad.
   const releasePad = useCallback((padId) => {
@@ -173,6 +178,48 @@ useEffect(() => {
   };
 }, [handlePadTrigger, releasePad]);
 
+  // Monitor real-time audio levels.
+useEffect(() => {
+  let isActive = true;
+  const frequencyData = new Uint8Array(128);
+
+  const updateAudioLevel = () => {
+    if (!isActive) return;
+
+    const analyser = getAudioAnalyser();
+
+    if (!analyser) {
+      setAudioLevel(0);
+      animationFrameRef.current =
+        requestAnimationFrame(updateAudioLevel);
+      return;
+    }
+
+    analyserRef.current = analyser;
+
+    analyser.getByteFrequencyData(frequencyData);
+
+    const average =
+      frequencyData.reduce((sum, value) => sum + value, 0) /
+      frequencyData.length;
+
+    setAudioLevel(Math.min(100, Math.round((average / 255) * 100)));
+
+    animationFrameRef.current =
+      requestAnimationFrame(updateAudioLevel);
+  };
+
+  animationFrameRef.current =
+    requestAnimationFrame(updateAudioLevel);
+
+  return () => {
+    isActive = false;
+
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+  };
+}, []);
 
   // Clean up timers and audio resources on unmount.
   useEffect(() => {
@@ -233,48 +280,81 @@ useEffect(() => {
         </div>
       </section>
 
+      <section className="audio-meter" aria-labelledby="audio-meter-title">
+      <div className="audio-meter__heading">
+        <div>
+          <h2 id="audio-meter-title">Audio Level</h2>
+          <p>Real-time audio activity</p>
+        </div>
 
-<section className="hit-log" aria-labelledby="hit-log-title">
-  <div className="hit-log__heading">
-    <div>
-      <h2 id="hit-log-title">Recent Hits</h2>
-      <p>Latest drum pad interactions</p>
-    </div>
-
-    <span className="hit-log__count">
-      {hitLog.length} / 8
-    </span>
-  </div>
-
-  <output
-    className="hit-log__output"
-    aria-live="polite"
-    aria-relevant="additions"
-    aria-label="Recent drum pad hits"
-  >
-    {hitLog.length === 0 ? (
-      <span className="hit-log__empty">
-        No hits yet. Play a drum pad to get started.
-      </span>
-    ) : (
-      hitLog.map((hit) => (
-        <span className="hit-log__entry" key={hit.id}>
-          <span className="hit-log__entry-key">
-            {hit.key}
-          </span>
-
-          <span className="hit-log__entry-label">
-            {hit.label}
-          </span>
-
-          <time className="hit-log__entry-time">
-            {hit.time}
-          </time>
+        <span className="audio-meter__value">
+          {audioLevel}%
         </span>
-      ))
-    )}
-  </output>
-</section>
+      </div>
+
+      <div
+        className="audio-meter__track"
+        role="meter"
+        aria-label="Audio level"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={audioLevel}
+      >
+        <div
+          className="audio-meter__fill"
+          style={{ width: `${audioLevel}%` }}
+        />
+      </div>
+
+      <div className="audio-meter__scale">
+        <span>LOW</span>
+        <span>MEDIUM</span>
+        <span>HIGH</span>
+      </div>
+    </section>
+
+
+    <section className="hit-log" aria-labelledby="hit-log-title">
+      <div className="hit-log__heading">
+        <div>
+          <h2 id="hit-log-title">Recent Hits</h2>
+          <p>Latest drum pad interactions</p>
+        </div>
+
+        <span className="hit-log__count">
+          {hitLog.length} / 8
+        </span>
+      </div>
+
+      <output
+        className="hit-log__output"
+        aria-live="polite"
+        aria-relevant="additions"
+        aria-label="Recent drum pad hits"
+      >
+        {hitLog.length === 0 ? (
+          <span className="hit-log__empty">
+            No hits yet. Play a drum pad to get started.
+          </span>
+        ) : (
+          hitLog.map((hit) => (
+            <span className="hit-log__entry" key={hit.id}>
+              <span className="hit-log__entry-key">
+                {hit.key}
+              </span>
+
+              <span className="hit-log__entry-label">
+                {hit.label}
+              </span>
+
+              <time className="hit-log__entry-time">
+                {hit.time}
+              </time>
+            </span>
+          ))
+        )}
+      </output>
+    </section>
 
 
       <footer className="studio__footer">
