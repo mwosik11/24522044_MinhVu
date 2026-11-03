@@ -72,59 +72,91 @@ const handlePadTrigger = useCallback(
 
 
   // Handle physical keyboard interaction.
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      // Ignore repeated keydown events while a key is held.
-      if (event.repeat) {
-        return;
-      }
+  
+useEffect(() => {
+  const releaseAllPads = () => {
+    setPressedPads([]);
 
-      const target = event.target;
+    timeoutRefs.current.forEach((timer) => {
+      clearTimeout(timer);
+    });
 
-      // Do not trigger drum pads while typing in form controls.
-      const isTyping =
-        target instanceof HTMLElement &&
-        (
-          target.matches("input, textarea, select") ||
-          target.isContentEditable
-        );
+    timeoutRefs.current.clear();
+  };
 
-      if (isTyping) {
-        return;
-      }
+  const handleKeyDown = (event) => {
+    if (event.repeat) {
+      return;
+    }
 
-      const pad = DRUM_PADS.find(
-        (item) => item.code === event.code
+    const target = event.target;
+
+    const isTyping =
+      target instanceof HTMLElement &&
+      (
+        target.matches("input, textarea, select") ||
+        target.isContentEditable
       );
 
-      if (!pad) {
-        return;
-      }
+    if (isTyping) {
+      return;
+    }
 
-      event.preventDefault();
-      void handlePadTrigger(pad, false);
-    };
+    const pad = DRUM_PADS.find(
+      (item) => item.code === event.code
+    );
 
-    const handleKeyUp = (event) => {
-      const pad = DRUM_PADS.find(
-        (item) => item.code === event.code
-      );
+    if (!pad) {
+      return;
+    }
 
-      if (!pad) {
-        return;
-      }
+    event.preventDefault();
+    void handlePadTrigger(pad, false);
+  };
 
-      releasePad(pad.id);
-    };
+  const handleKeyUp = (event) => {
+    const pad = DRUM_PADS.find(
+      (item) => item.code === event.code
+    );
 
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    if (!pad) {
+      return;
+    }
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [handlePadTrigger, releasePad]);
+    releasePad(pad.id);
+  };
+
+  const handleWindowBlur = () => {
+    releaseAllPads();
+  };
+
+  const handleVisibilityChange = () => {
+    if (document.hidden) {
+      releaseAllPads();
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("keyup", handleKeyUp);
+  window.addEventListener("blur", handleWindowBlur);
+
+  document.addEventListener(
+    "visibilitychange",
+    handleVisibilityChange
+  );
+
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+    window.removeEventListener("keyup", handleKeyUp);
+    window.removeEventListener("blur", handleWindowBlur);
+
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibilityChange
+    );
+  };
+}, [handlePadTrigger, releasePad]);
+
 
   // Clean up timers and audio resources on unmount.
   useEffect(() => {
