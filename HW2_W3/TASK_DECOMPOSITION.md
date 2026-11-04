@@ -76,7 +76,7 @@
 - [x] Commit 7 – FIFO voice stealing.
 - [x] Commit 8 – Piano keyboard interactions.
 - [x] Commit 9 – FIFO note recording.
-- [ ] Commit 10 – Variable-speed sequencer.
+- [x] Commit 10 – Variable-speed sequencer.
 - [ ] Commit 11 – Abortable playback and cleanup.
 - [ ] Commit 12 – Testing and verification.
 - [ ] Commit 13 – AI failure audit.
