@@ -67,16 +67,15 @@ export class Sequencer {
 
   // Stop playback and release every active synthesizer voice.
   stop() {
-    if (this.abortController) {
-      this.abortController.abort();
-    }
-
-    // Release notes tracked by the sequencer.
-    this.releaseActiveNotes();
-
-    // Safety fallback: release every voice in the synthesizer.
-    this.synth.stopAll();
+  if (this.abortController) {
+    this.abortController.abort();
   }
+
+  this.releaseActiveNotes();
+
+  // Call stopAll only when the synth implementation provides it.
+  this.synth.stopAll?.();
+}
 
   releaseActiveNotes() {
     for (const midi of this.activeNotes) {
