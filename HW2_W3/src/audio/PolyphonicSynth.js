@@ -89,6 +89,11 @@ noteOn(midi) {
       now + 0.04
     );
 
+    voice.oscillator.onended = () => {
+        voice.oscillator.disconnect();
+        voice.gainNode.disconnect();
+    };
+
     voice.oscillator.stop(now + 0.04);
 
     this.activeVoices.delete(midi);

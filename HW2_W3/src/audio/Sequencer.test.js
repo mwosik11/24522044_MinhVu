@@ -109,4 +109,42 @@ describe("Sequencer", () => {
     await vi.runAllTimersAsync();
     await playback;
     });
+
+    it("should stop playback immediately", async () => {
+  const notes = [
+    { midi: 60, deltaMs: 0, durationMs: 1000 },
+    { midi: 64, deltaMs: 0, durationMs: 1000 },
+  ];
+
+  const playback = sequencer.play(notes);
+
+  expect(synth.noteOn).toHaveBeenCalledWith(60);
+
+  sequencer.stop();
+
+  await playback;
+
+  expect(synth.noteOff).toHaveBeenCalledWith(60);
+  expect(synth.noteOn).not.toHaveBeenCalledWith(64);
+  expect(sequencer.isPlaying).toBe(false);
+});
+
+it("should not continue playback after abort", async () => {
+  const notes = [
+    { midi: 60, deltaMs: 0, durationMs: 1000 },
+    { midi: 64, deltaMs: 0, durationMs: 1000 },
+    { midi: 67, deltaMs: 0, durationMs: 1000 },
+  ];
+
+  const playback = sequencer.play(notes);
+
+  sequencer.stop();
+
+  await playback;
+
+  expect(synth.noteOn).toHaveBeenCalledTimes(1);
+  expect(synth.noteOff).toHaveBeenCalledWith(60);
+  expect(synth.noteOn).not.toHaveBeenCalledWith(64);
+  expect(synth.noteOn).not.toHaveBeenCalledWith(67);
+});
 });
