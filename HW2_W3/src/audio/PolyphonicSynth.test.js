@@ -109,4 +109,40 @@ describe("PolyphonicSynth", () => {
 
     expect(synth.activeVoices.size).toBe(0);
   });
+   
+  it("should allow a maximum of 8 simultaneous voices", () => {
+    for (let midi = 60; midi < 68; midi++) {
+      synth.noteOn(midi);
+    }
+
+    expect(synth.activeVoices.size).toBe(8);
+  });
+
+  it("should steal the oldest voice when the ninth note is played", () => {
+    for (let midi = 60; midi < 68; midi++) {
+      synth.noteOn(midi);
+    }
+
+    const oldestVoice = synth.activeVoices.get(60);
+
+    synth.noteOn(72);
+
+    expect(synth.activeVoices.size).toBe(8);
+    expect(synth.activeVoices.has(60)).toBe(false);
+    expect(synth.activeVoices.has(72)).toBe(true);
+
+    expect(oldestVoice.oscillator.stop).toHaveBeenCalledWith(0.04);
+  });
+
+  it("should preserve FIFO order when stealing voices", () => {
+    for (let midi = 60; midi < 68; midi++) {
+      synth.noteOn(midi);
+    }
+
+    synth.noteOn(72);
+
+    expect([...synth.activeVoices.keys()]).toEqual([
+      61, 62, 63, 64, 65, 66, 67, 72
+    ]);
+  });
 });

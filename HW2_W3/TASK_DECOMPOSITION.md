@@ -73,7 +73,7 @@
 - [x] Commit 4 – MIDI frequency utilities.
 - [x] Commit 5 – Memoized piano key component.
 - [x] Commit 6 – Polyphonic synthesizer.
-- [ ] Commit 7 – FIFO voice stealing.
+- [x] Commit 7 – FIFO voice stealing.
 - [ ] Commit 8 – Piano keyboard interactions.
 - [ ] Commit 9 – FIFO note recording.
 - [ ] Commit 10 – Variable-speed sequencer.

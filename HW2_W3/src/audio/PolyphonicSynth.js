@@ -1,4 +1,4 @@
-
+const MAX_VOICES = 8;
 import { midiToFrequency } from "../utils/frequency.js";
 
 export class PolyphonicSynth {
@@ -22,44 +22,52 @@ export class PolyphonicSynth {
     return this.audioContext;
   }
 
-  noteOn(midi) {
-    const context = this.initialize();
+  
+noteOn(midi) {
+  const context = this.initialize();
 
-    if (context.state === "suspended") {
-      context.resume();
-    }
-
-    // Prevent duplicate active voices for the same MIDI note.
-    if (this.activeVoices.has(midi)) {
-      this.noteOff(midi);
-    }
-
-    const oscillator = context.createOscillator();
-    const gainNode = context.createGain();
-
-    const frequency = midiToFrequency(midi);
-    const now = context.currentTime;
-
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(frequency, now);
-
-    gainNode.gain.setValueAtTime(0.0001, now);
-    gainNode.gain.exponentialRampToValueAtTime(
-      0.3,
-      now + 0.02
-    );
-
-    oscillator.connect(gainNode);
-    gainNode.connect(context.destination);
-
-    oscillator.start(now);
-
-    this.activeVoices.set(midi, {
-      oscillator,
-      gainNode,
-      frequency,
-    });
+  if (context.state === "suspended") {
+    context.resume();
   }
+
+  // Prevent duplicate active voices for the same MIDI note.
+  if (this.activeVoices.has(midi)) {
+    this.noteOff(midi);
+  }
+
+  // FIFO voice stealing: remove the oldest voice.
+  if (this.activeVoices.size >= MAX_VOICES) {
+    const oldestMidi = this.activeVoices.keys().next().value;
+    this.noteOff(oldestMidi);
+  }
+
+  const oscillator = context.createOscillator();
+  const gainNode = context.createGain();
+
+  const frequency = midiToFrequency(midi);
+  const now = context.currentTime;
+
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(frequency, now);
+
+  gainNode.gain.setValueAtTime(0.0001, now);
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.3,
+    now + 0.02
+  );
+
+  oscillator.connect(gainNode);
+  gainNode.connect(context.destination);
+
+  oscillator.start(now);
+
+  this.activeVoices.set(midi, {
+    oscillator,
+    gainNode,
+    frequency,
+  });
+}
+
 
   noteOff(midi) {
     const voice = this.activeVoices.get(midi);
