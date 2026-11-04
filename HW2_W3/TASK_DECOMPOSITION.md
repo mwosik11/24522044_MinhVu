@@ -68,9 +68,9 @@
 ## 4. Commit Tracking
 
 - [x] Commit 1 – Project initialization.
-- [ ] Commit 2 – Project rules and task decomposition.
-- [ ] Commit 3 – Algorithmic MIDI key generation.
-- [ ] Commit 4 – MIDI frequency utilities.
+- [x] Commit 2 – Project rules and task decomposition.
+- [x] Commit 3 – Algorithmic MIDI key generation.
+- [x] Commit 4 – MIDI frequency utilities.
 - [ ] Commit 5 – Memoized piano key component.
 - [ ] Commit 6 – Polyphonic synthesizer.
 - [ ] Commit 7 – FIFO voice stealing.
