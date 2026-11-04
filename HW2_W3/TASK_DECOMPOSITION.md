@@ -78,7 +78,7 @@
 - [x] Commit 9 – FIFO note recording.
 - [x] Commit 10 – Variable-speed sequencer.
 - [x] Commit 11 – Abortable playback and cleanup.
-- [ ] Commit 12 – Testing and verification.
+- [x] Commit 12 – Testing and verification.
 - [ ] Commit 13 – AI failure audit.
 
 _Note: Commit tracking must be updated as each milestone is completed. Only document bugs in the AI Failure Audit that were actually observed and verified._
