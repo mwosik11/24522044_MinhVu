@@ -1,0 +1,108 @@
+
+.drop-card {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 24px;
+  min-width: 0;
+  background: #151d2b;
+  color: #f5f7fb;
+  border: 1px solid #34445d;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 15%);
+}
+
+.drop-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.drop-card__category,
+.drop-card__label,
+.drop-card__footer {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.drop-card__category,
+.drop-card__label,
+.drop-card__footer > span {
+  color: #9baac0;
+}
+
+.drop-card__status {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.drop-card__status--warmup {
+  color: #f4cd75;
+  background: #473b21;
+}
+
+.drop-card__status--airdrop_live {
+  color: #77e2a5;
+  background: #173b2a;
+}
+
+.drop-card__status--looted_out {
+  color: #f39a9a;
+  background: #482626;
+}
+
+.drop-card__status--expired {
+  color: #b7c0ce;
+  background: #303b4c;
+}
+
+.drop-card__title {
+  min-height: 52px;
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.drop-card__price {
+  color: #f4cd75;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.drop-card__countdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  background: #0e1521;
+  border: 1px solid #29374b;
+  border-radius: 10px;
+}
+
+.drop-card__timer {
+  color: #f5f7fb;
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+}
+
+.drop-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #34445d;
+}
+
+.drop-card__footer strong {
+  color: #f5f7fb;
+  letter-spacing: 0;
+}
