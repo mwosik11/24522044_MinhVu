@@ -3,12 +3,13 @@ import { useCallback, useReducer, useRef, useState } from "react";
 
 import {
   CLAIM_ACTION,
+  CLAIM_STATUS,
   createInitialClaimState,
   claimReducer,
 } from "../domain/claimStateMachine.js";
 
 /**
- * Manage inventory using optimistic stock reservation.
+ * Manage inventory with optimistic updates and rollback.
  *
  * @param {number} initialStock
  */
@@ -27,17 +28,12 @@ export function useOptimisticInventory(initialStock) {
     createInitialClaimState
   );
 
-  // Synchronous inventory reference.
   const stockRef = useRef(initialStock);
-
-  // Prevent duplicate concurrent claims.
   const pendingReservationRef = useRef(null);
 
   /**
    * Reserve one inventory unit immediately.
-   *
-   * Returns the transaction snapshot or null when
-   * the claim cannot be started.
+   * Returns a transaction snapshot or null.
    */
   const beginClaim = useCallback((claimId) => {
     if (
@@ -47,12 +43,12 @@ export function useOptimisticInventory(initialStock) {
       return null;
     }
 
-    // Prevent double-submit.
+    // Prevent concurrent or duplicate claims.
     if (pendingReservationRef.current !== null) {
       return null;
     }
 
-    // Prevent negative inventory.
+    // Inventory must remain non-negative.
     if (stockRef.current <= 0) {
       return null;
     }
@@ -66,16 +62,12 @@ export function useOptimisticInventory(initialStock) {
       optimisticStock,
     });
 
-    // Save snapshot before updating inventory.
+    // Lock the transaction and save its rollback snapshot.
     pendingReservationRef.current = transaction;
 
-    // Update the synchronous reference.
     stockRef.current = optimisticStock;
-
-    // Update React UI immediately.
     setRemainingStock(optimisticStock);
 
-    // Transition claim lifecycle to PENDING.
     dispatchClaim({
       type: CLAIM_ACTION.START,
       claimId,
@@ -85,8 +77,7 @@ export function useOptimisticInventory(initialStock) {
   }, []);
 
   /**
-   * Confirm an optimistic reservation after
-   * successful claim processing.
+   * Confirm the reservation after successful server processing.
    */
   const completeClaim = useCallback((claimId) => {
     const transaction = pendingReservationRef.current;
@@ -100,6 +91,53 @@ export function useOptimisticInventory(initialStock) {
       claimId,
     });
 
+    // Release the in-flight lock.
+    pendingReservationRef.current = null;
+
+    return true;
+  }, []);
+
+  /**
+   * Reject a claim and restore the previous inventory.
+   *
+   * @param {string} claimId
+   * @param {number} statusCode
+   * @param {string} message
+   * @returns {boolean}
+   */
+  const rejectClaim = useCallback((
+    claimId,
+    statusCode,
+    message
+  ) => {
+    const transaction = pendingReservationRef.current;
+
+    // Ignore stale or unrelated responses.
+    if (!transaction || transaction.claimId !== claimId) {
+      return false;
+    }
+
+    // Restore the exact stock snapshot.
+    stockRef.current = transaction.previousStock;
+    setRemainingStock(transaction.previousStock);
+
+    if (statusCode === 409) {
+      dispatchClaim({
+        type: CLAIM_ACTION.CONFLICT,
+        claimId,
+        message:
+          message || "The item is no longer available.",
+      });
+    } else {
+      dispatchClaim({
+        type: CLAIM_ACTION.ERROR,
+        claimId,
+        message:
+          message || "The claim request failed.",
+      });
+    }
+
+    // Allow another claim attempt.
     pendingReservationRef.current = null;
 
     return true;
@@ -108,9 +146,9 @@ export function useOptimisticInventory(initialStock) {
   return {
     remainingStock,
     claimState,
-    isClaimPending:
-      claimState.status === "PENDING",
+    isClaimPending: claimState.status === CLAIM_STATUS.PENDING,
     beginClaim,
     completeClaim,
+    rejectClaim,
   };
 }
