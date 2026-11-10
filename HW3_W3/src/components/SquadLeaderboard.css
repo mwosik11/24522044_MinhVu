@@ -146,3 +146,66 @@
     font-size: 12px;
   }
 }
+
+
+/* Leaderboard filtering and sorting controls */
+
+.leaderboard__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(180px, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.leaderboard__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leaderboard__field label {
+  color: #9baac0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.leaderboard__field input,
+.leaderboard__field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: #f5f7fb;
+  background: #0e1521;
+  border: 1px solid #34445d;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.leaderboard__field input::placeholder {
+  color: #74839a;
+}
+
+.leaderboard__field input:focus,
+.leaderboard__field select:focus {
+  border-color: #f4cd75;
+}
+
+.leaderboard__result-count {
+  margin: 0 0 14px;
+  color: #9baac0;
+  font-size: 12px;
+}
+
+.leaderboard__empty {
+  padding: 28px 16px !important;
+  color: #9baac0 !important;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .leaderboard__controls {
+    grid-template-columns: 1fr;
+  }
+}
+
