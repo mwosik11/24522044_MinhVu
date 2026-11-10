@@ -8,6 +8,9 @@ import "./App.css";
 import SquadLeaderboard from "./components/SquadLeaderboard.jsx";
 import { mockSquadStandings } from "./data/pubgMockData.js";
 
+import KillFeed from "./components/KillFeed.jsx";
+import { mockKillFeedEvents } from "./data/pubgMockData.js";
+
 function App() {
   return (
     <main className="arena">
@@ -61,6 +64,10 @@ function App() {
       
       <section className="arena__section">
           <SquadLeaderboard squads={mockSquadStandings} />
+      </section>
+
+      <section className="arena__section">
+        <KillFeed events={mockKillFeedEvents} />
       </section>
 
       <footer className="arena__footer">

@@ -1,0 +1,193 @@
+
+.kill-feed {
+  margin-top: 36px;
+  padding: 28px;
+  color: #f5f7fb;
+  background: #151d2b;
+  border: 1px solid #34445d;
+  border-radius: 16px;
+}
+
+.kill-feed__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.kill-feed__eyebrow {
+  color: #f4cd75;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.kill-feed__header h2 {
+  margin: 9px 0;
+  font-size: clamp(22px, 4vw, 30px);
+}
+
+.kill-feed__header p {
+  margin: 0;
+  color: #9baac0;
+  font-size: 14px;
+}
+
+.kill-feed__count {
+  color: #a9b5c7;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.kill-feed__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(180px, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.kill-feed__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kill-feed__field label {
+  color: #9baac0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.kill-feed__field input,
+.kill-feed__field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: #f5f7fb;
+  background: #0e1521;
+  border: 1px solid #34445d;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.kill-feed__field input::placeholder {
+  color: #74839a;
+}
+
+.kill-feed__result-count {
+  margin: 0 0 14px;
+  color: #9baac0;
+  font-size: 12px;
+}
+
+.kill-feed__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kill-feed__item {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #0e1521;
+  border: 1px solid #29374b;
+  border-radius: 10px;
+}
+
+.kill-feed__time {
+  color: #8292a9;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.kill-feed__event {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-width: 0;
+  font-size: 13px;
+}
+
+.kill-feed__killer {
+  color: #77e2a5;
+  overflow-wrap: anywhere;
+}
+
+.kill-feed__action {
+  color: #8292a9;
+  font-size: 12px;
+}
+
+.kill-feed__victim {
+  color: #f39a9a;
+  overflow-wrap: anywhere;
+}
+
+.kill-feed__weapon {
+  padding: 7px 10px;
+  color: #f4cd75;
+  background: #473b21;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.kill-feed__empty {
+  padding: 28px 16px;
+  color: #9baac0;
+  text-align: center;
+  background: #0e1521;
+  border-radius: 10px;
+}
+
+.kill-feed__footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #34445d;
+  color: #9baac0;
+  font-size: 11px;
+  letter-spacing: 0.8px;
+}
+
+.kill-feed__footer strong {
+  color: #c8d1df;
+  letter-spacing: 0;
+}
+
+@media (max-width: 600px) {
+  .kill-feed {
+    padding: 18px 14px;
+  }
+
+  .kill-feed__controls {
+    grid-template-columns: 1fr;
+  }
+
+  .kill-feed__item {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .kill-feed__time {
+    font-size: 11px;
+  }
+
+  .kill-feed__weapon {
+    justify-self: start;
+  }
+}
