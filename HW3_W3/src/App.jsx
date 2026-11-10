@@ -1,6 +1,8 @@
 
-import AirdropCountdown from "./components/AirdropCountdown.jsx";
+import CrateClaimCard from "./components/CrateClaimCard.jsx";
+
 import { mockCrateDrops } from "./data/pubgMockData.js";
+
 import "./App.css";
 
 function App() {
@@ -46,7 +48,7 @@ function App() {
 
         <div className="arena__grid">
           {mockCrateDrops.map((drop) => (
-            <AirdropCountdown
+            <CrateClaimCard
               key={drop.id}
               drop={drop}
             />

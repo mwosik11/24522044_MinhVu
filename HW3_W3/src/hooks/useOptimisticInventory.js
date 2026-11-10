@@ -1,9 +1,10 @@
 
 import { useCallback, useReducer, useRef, useState } from "react";
 
+import { CLAIM_STATUS } from "../domain/pubgContracts.js";
+
 import {
   CLAIM_ACTION,
-  CLAIM_STATUS,
   createInitialClaimState,
   claimReducer,
 } from "../domain/claimStateMachine.js";

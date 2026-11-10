@@ -106,3 +106,58 @@
   color: #f5f7fb;
   letter-spacing: 0;
 }
+
+
+.drop-card__claim {
+  width: 100%;
+  min-height: 46px;
+  border: 0;
+  border-radius: 8px;
+  background: #d9a83f;
+  color: #151d2b;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.drop-card__claim:hover:not(:disabled) {
+  background: #f4cd75;
+}
+
+.drop-card__claim:disabled {
+  background: #34445d;
+  color: #9baac0;
+  cursor: not-allowed;
+}
+
+.drop-card__message {
+  margin: 0;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.drop-card__message--pending {
+  color: #f4cd75;
+  background: #473b21;
+}
+
+.drop-card__message--success {
+  color: #77e2a5;
+  background: #173b2a;
+}
+
+.drop-card__message--conflict,
+.drop-card__message--error {
+  color: #f39a9a;
+  background: #482626;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop-card__claim {
+    transition: none;
+  }
+}
