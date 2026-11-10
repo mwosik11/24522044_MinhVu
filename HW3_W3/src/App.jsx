@@ -5,6 +5,9 @@ import { mockCrateDrops } from "./data/pubgMockData.js";
 
 import "./App.css";
 
+import SquadLeaderboard from "./components/SquadLeaderboard.jsx";
+import { mockSquadStandings } from "./data/pubgMockData.js";
+
 function App() {
   return (
     <main className="arena">
@@ -54,6 +57,10 @@ function App() {
             />
           ))}
         </div>
+      </section>
+      
+      <section className="arena__section">
+          <SquadLeaderboard squads={mockSquadStandings} />
       </section>
 
       <footer className="arena__footer">
