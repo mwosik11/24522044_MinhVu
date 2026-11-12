@@ -20,6 +20,7 @@ import {
 
 import { RELATIONSHIP_PHASE } from "../domain/relationshipMachine.js";
 import { SituationshipAnalyzer } from "./SituationshipAnalyzer.jsx";
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const randomUUID = vi.fn();
 
