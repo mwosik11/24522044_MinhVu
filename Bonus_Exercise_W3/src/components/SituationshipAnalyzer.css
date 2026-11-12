@@ -731,6 +731,43 @@ a {
   border: 1px solid #9bc6a8;
 }
 
+
+/* Ghosting timer states */
+
+.sa-timer-notice--idle {
+  color: var(--sa-ink);
+  background: #f4f7f5;
+  border-color: var(--sa-border);
+}
+
+.sa-timer-notice--idle .sa-timer-notice__icon {
+  color: var(--sa-brand-dark);
+  background: var(--sa-brand-soft);
+}
+
+.sa-timer-notice--active {
+  color: #55451e;
+  background: #fff9e9;
+  border-color: #d9bd78;
+}
+
+.sa-timer-notice--active .sa-timer-notice__icon {
+  color: #4c3a10;
+  background: #f2dda3;
+  font-variant-numeric: tabular-nums;
+}
+
+.sa-timer-notice--complete {
+  color: var(--sa-success);
+  background: var(--sa-success-soft);
+  border-color: #9bc6a8;
+}
+
+.sa-timer-notice--complete .sa-timer-notice__icon {
+  color: white;
+  background: var(--sa-success);
+}
+
 /* ---------------------------------------------------------
    11. EFFORT INPUT PANELS
 --------------------------------------------------------- */

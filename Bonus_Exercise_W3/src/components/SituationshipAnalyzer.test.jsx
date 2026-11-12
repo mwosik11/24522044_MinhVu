@@ -127,27 +127,36 @@ describe("SituationshipAnalyzer", () => {
     expect(status.textContent).toContain("[RED-FLAG]");
   });
 
-  it("transitions to OFFICIAL_LOVE and cancels the ghosting timer", () => {
+  
+    it("transitions to OFFICIAL_LOVE and cancels the ghosting timer", () => {
     render(<SituationshipAnalyzer />);
 
+    // First participant starts the reply window.
     fireEvent.click(
-      screen.getByRole("button", {
+        screen.getByRole("button", {
+        name: "Record My Effort",
+        }),
+    );
+
+    fireEvent.click(
+        screen.getByRole("button", {
         name: "Commit",
-      }),
+        }),
     );
 
     expect(
-      screen.getByText(/Current phase:/).textContent,
+        screen.getByText(/Current phase:/).textContent,
     ).toContain("Official Love");
 
     act(() => {
-      vi.advanceTimersByTime(5000);
+        vi.advanceTimersByTime(5000);
     });
 
     expect(
-      screen.getByText(/Current phase:/).textContent,
+        screen.getByText(/Current phase:/).textContent,
     ).toContain("Official Love");
-  });
+    });
+
 
   it("transitions to GHOSTED_EXIT when Stop and Exit is clicked", () => {
     render(<SituationshipAnalyzer />);
@@ -163,15 +172,54 @@ describe("SituationshipAnalyzer", () => {
     ).toContain("Ghosted Exit");
   });
 
-  it("automatically exits after the 5-second ghosting timeout", () => {
+  
+    it("automatically exits after the 5-second ghosting timeout", () => {
     render(<SituationshipAnalyzer />);
 
+    // The first effort signal starts the timer.
+    fireEvent.click(
+        screen.getByRole("button", {
+        name: "Record My Effort",
+        }),
+    );
+
     act(() => {
-      vi.advanceTimersByTime(5000);
+        vi.advanceTimersByTime(5000);
     });
 
     expect(
-      screen.getByText(/Current phase:/).textContent,
+        screen.getByText(/Current phase:/).textContent,
     ).toContain("Ghosted Exit");
+    });
+
+
+it("cancels the ghosting timer when the rival responds", () => {
+  render(<SituationshipAnalyzer />);
+
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: "Record My Effort",
+    }),
+  );
+
+  // Rival responds before the timeout expires.
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: "Record Rival Effort",
+    }),
+  );
+
+  act(() => {
+    vi.advanceTimersByTime(5000);
   });
+
+  expect(
+    screen.getByText(/Current phase:/).textContent,
+  ).toContain("Dating Without Love");
+
+  expect(
+    screen.getByText("Mutual effort recorded"),
+  ).toBeTruthy();
+});
+
 });

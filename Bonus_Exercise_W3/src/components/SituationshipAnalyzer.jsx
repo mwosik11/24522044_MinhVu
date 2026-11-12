@@ -102,9 +102,18 @@ export function SituationshipAnalyzer() {
   const [rivalTries, setRivalTries] = useState(1);
   const [effortLog, setEffortLog] = useState([]);
 
-  // Derived state: computed during rendering.
+  // Derived values are calculated during rendering.
   const { myImpact, rivalImpact } =
     calculateEffortTotals(effortLog);
+
+  const firstEffortActor = effortLog[0]?.actor ?? null;
+
+  const hasMutualEffortResponse =
+    firstEffortActor !== null &&
+    effortLog.some((signal) => signal.actor !== firstEffortActor);
+
+  const isWaitingForMutualResponse =
+    effortLog.length > 0 && !hasMutualEffortResponse;
 
   const isRedFlag = detectRedFlag({
     phase,
@@ -122,7 +131,11 @@ export function SituationshipAnalyzer() {
 
   const currentPhase = PHASES[currentPhaseIndex];
 
-  useGhostingTimer(phase, myTries, setPhase);
+  const { remainingSeconds } = useGhostingTimer(
+    phase,
+    isWaitingForMutualResponse,
+    setPhase,
+  );
 
   function dispatchEvent(eventType) {
     setPhase((currentPhaseValue) =>
@@ -204,6 +217,7 @@ export function SituationshipAnalyzer() {
             <span className="sa-header__label">
               INTERACTIVE ANALYZER
             </span>
+
             <span className="sa-version">REACT 19</span>
           </div>
         </header>
@@ -219,19 +233,17 @@ export function SituationshipAnalyzer() {
               STATE MACHINE / RELATIONSHIP ANALYSIS
             </p>
 
-            
             <h1
-            id="sa-page-title"
-            aria-label="Situationship Analyzer"
+              id="sa-page-title"
+              aria-label="Situationship Analyzer"
             >
-            Situationship{" "}
-            <span>Analyzer.</span>
+              Situationship{" "}
+              <span>Analyzer.</span>
             </h1>
 
-
             <p className="sa-intro__description">
-              Understand the relationship state.
-              Measure the effort. Identify the imbalance.
+              Understand the relationship state. Measure the effort.
+              Identify the imbalance.
             </p>
           </div>
 
@@ -241,10 +253,7 @@ export function SituationshipAnalyzer() {
             </span>
 
             <div className="sa-system-status">
-              <span
-                className="sa-status-dot"
-                aria-hidden="true"
-              />
+              <span className="sa-status-dot" aria-hidden="true" />
               <span>Analysis active</span>
             </div>
 
@@ -255,7 +264,6 @@ export function SituationshipAnalyzer() {
         {/* Dashboard */}
 
         <div className="sa-dashboard-grid">
-
           <div className="sa-primary-column">
 
             {/* Relationship overview */}
@@ -269,6 +277,7 @@ export function SituationshipAnalyzer() {
                   <p className="sa-step-label">
                     01 / RELATIONSHIP
                   </p>
+
                   <h2 id="sa-phase-title">
                     Relationship Overview
                   </h2>
@@ -279,12 +288,13 @@ export function SituationshipAnalyzer() {
 
               <div className="sa-current-phase">
                 <div className="sa-current-phase__content">
-                <p className="sa-current-phase__title">
-                    Current phase: <strong>{PHASE_LABELS[phase]}</strong>
-                </p>
+                  <p className="sa-current-phase__title">
+                    Current phase:{" "}
+                    <strong>{PHASE_LABELS[phase]}</strong>
+                  </p>
 
-                <p>{currentPhase?.description}</p>
-               </div>
+                  <p>{currentPhase?.description}</p>
+                </div>
 
                 <div
                   className="sa-phase-number"
@@ -330,6 +340,8 @@ export function SituationshipAnalyzer() {
                   );
                 })}
               </ol>
+
+              {/* FSM action buttons */}
 
               <div
                 className="sa-phase-actions"
@@ -386,33 +398,85 @@ export function SituationshipAnalyzer() {
                 )}
               </div>
 
-              {phase === RELATIONSHIP_PHASE.DATING_NO_LOVE && (
-                <div className="sa-timer-notice">
-                  <span
-                    className="sa-timer-notice__icon"
-                    aria-hidden="true"
-                  >
-                    5s
-                  </span>
+              {/* Ghosting timer notice - visual only */}
 
-                  <div>
-                    <strong>Ghosting timer active</strong>
-                    <p>
-                      The relationship automatically exits
-                      after five seconds unless the phase
-                      changes. Editing your effort input
-                      restarts this timer.
-                    </p>
-                  </div>
+              {phase === RELATIONSHIP_PHASE.DATING_NO_LOVE && (
+                <div
+                  className={`sa-timer-notice ${
+                    isWaitingForMutualResponse
+                      ? "sa-timer-notice--active"
+                      : effortLog.length === 0
+                        ? "sa-timer-notice--idle"
+                        : "sa-timer-notice--complete"
+                  }`}
+                >
+                  {isWaitingForMutualResponse ? (
+                    <>
+                      <span
+                        className="sa-timer-notice__icon"
+                        aria-hidden="true"
+                      >
+                        {remainingSeconds ?? 5}s
+                      </span>
+
+                      <div>
+                        <strong>
+                          Waiting for reciprocal effort
+                        </strong>
+
+                        <p>
+                          Automatic exit in {remainingSeconds ?? 5}{" "}
+                          seconds. Record an effort from the other
+                          participant to cancel this timer.
+                        </p>
+                      </div>
+                    </>
+                  ) : effortLog.length === 0 ? (
+                    <>
+                      <span
+                        className="sa-timer-notice__icon"
+                        aria-hidden="true"
+                      >
+                        START
+                      </span>
+
+                      <div>
+                        <strong>Ghosting timer not started</strong>
+
+                        <p>
+                          Record the first effort signal to begin a
+                          five-second response window.
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <span
+                        className="sa-timer-notice__icon"
+                        aria-hidden="true"
+                      >
+                        ✓
+                      </span>
+
+                      <div>
+                        <strong>Mutual effort recorded</strong>
+
+                        <p>
+                          Both participants have recorded effort.
+                          The automatic exit timer is canceled.
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 
               {phase === RELATIONSHIP_PHASE.GHOSTED_EXIT && (
                 <div className="sa-exit-notice">
                   <strong>Relationship workflow ended</strong>
+
                   <p>
-                    The situationship has reached its terminal
-                    state.
+                    The situationship has reached its terminal state.
                   </p>
                 </div>
               )}
@@ -420,6 +484,7 @@ export function SituationshipAnalyzer() {
               {phase === RELATIONSHIP_PHASE.OFFICIAL_LOVE && (
                 <div className="sa-success-notice">
                   <strong>Mutual commitment confirmed</strong>
+
                   <p>
                     The relationship has reached the official
                     commitment phase.
@@ -439,6 +504,7 @@ export function SituationshipAnalyzer() {
                   <p className="sa-step-label">
                     02 / INPUT DATA
                   </p>
+
                   <h2 id="sa-effort-title">Record Effort</h2>
                 </div>
 
@@ -446,11 +512,13 @@ export function SituationshipAnalyzer() {
               </div>
 
               <p className="sa-card-description">
-                Record each participant's effort as an
-                independent signal.
+                Record each participant's effort as an independent
+                signal.
               </p>
 
               <div className="sa-input-grid">
+
+                {/* My Effort */}
 
                 <div className="sa-input-panel sa-input-panel--mine">
                   <div className="sa-input-panel__header">
@@ -496,6 +564,8 @@ export function SituationshipAnalyzer() {
                     <span aria-hidden="true">+</span>
                   </button>
                 </div>
+
+                {/* Rival Effort */}
 
                 <div className="sa-input-panel sa-input-panel--rival">
                   <div className="sa-input-panel__header">
@@ -550,6 +620,8 @@ export function SituationshipAnalyzer() {
 
           <aside className="sa-sidebar">
 
+            {/* Effort Balance */}
+
             <section
               className={`sa-card sa-balance-card ${
                 isRedFlag ? "sa-balance-card--alert" : ""
@@ -561,6 +633,7 @@ export function SituationshipAnalyzer() {
                   <p className="sa-step-label">
                     03 / DERIVED STATE
                   </p>
+
                   <h2 id="sa-balance-title">Effort Balance</h2>
                 </div>
               </div>
@@ -593,6 +666,8 @@ export function SituationshipAnalyzer() {
                   </h3>
                 </div>
               </div>
+
+              {/* Single live region for Red-Flag status */}
 
               <output
                 className="sa-live-status"
@@ -635,14 +710,17 @@ export function SituationshipAnalyzer() {
                 </code>
 
                 <p>
-                  Red Flag is derived directly from the
-                  relationship phase and recorded effort totals.
+                  Red Flag is derived directly from the relationship
+                  phase and recorded effort totals.
                 </p>
               </div>
             </section>
 
+            {/* Model specification */}
+
             <section className="sa-card sa-model-card">
               <p className="sa-step-label">MODEL SPECIFICATION</p>
+
               <h2>Asymmetric weighting</h2>
 
               <div className="sa-model-row">
@@ -656,15 +734,15 @@ export function SituationshipAnalyzer() {
               </div>
 
               <p className="sa-model-note">
-                Each participant uses a different impact
-                multiplier. Total impact is calculated from
-                immutable effort signals.
+                Each participant uses a different impact multiplier.
+                Total impact is calculated from immutable effort
+                signals.
               </p>
             </section>
           </aside>
         </div>
 
-        {/* Effort history */}
+        {/* Effort History */}
 
         <section
           className="sa-card sa-history-card"
@@ -709,9 +787,7 @@ export function SituationshipAnalyzer() {
           ) : (
             <ol className="sa-history-list">
               {effortLog.map((signal, index) => {
-                const isMine =
-                  signal.actor === EFFORT_ACTOR.EM;
-
+                const isMine = signal.actor === EFFORT_ACTOR.EM;
                 const impact = calculateEffortImpact(signal);
 
                 return (
@@ -743,9 +819,7 @@ export function SituationshipAnalyzer() {
                     </div>
 
                     <div className="sa-history-item__calculation">
-                      <span>
-                        Impact: {impact.toFixed(2)}
-                      </span>
+                      <span>Impact: {impact.toFixed(2)}</span>
                     </div>
 
                     <span className="sa-history-item__multiplier">
@@ -771,6 +845,7 @@ export function SituationshipAnalyzer() {
             Finite State Machine · Derived State · Immutable Log
           </p>
         </footer>
+
       </div>
     </div>
   );
