@@ -37,7 +37,7 @@ The application models relationship phases, calculates asymmetric effort impact,
   - AI_DO: 50.0
 - [x] Implement effort signal validation.
 - [x] Implement effort impact calculation.
-- [ ] Test edge cases and calculation accuracy.
+- [x] Test edge cases and calculation accuracy.
 
 ### Task 4 – Immutable Effort Log
 
