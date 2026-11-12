@@ -1,5 +1,6 @@
 
 import { useId, useState } from "react";
+import "./SituationshipAnalyzer.css";
 
 import {
   INITIAL_RELATIONSHIP_STATE,
@@ -97,7 +98,10 @@ export function SituationshipAnalyzer() {
   }
 
   return (
-    <article aria-label="Hen Ho Khong Yeu Analyzer">
+        <article
+            className="situationship-analyzer"
+            aria-label="Hen Ho Khong Yeu Analyzer"
+        >
       <header>
         <h1>Situationship Analyzer</h1>
         <p>Analyze relationship states and asymmetric effort.</p>

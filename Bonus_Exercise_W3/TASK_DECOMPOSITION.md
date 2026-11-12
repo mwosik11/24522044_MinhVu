@@ -86,10 +86,10 @@ The application models relationship phases, calculates asymmetric effort impact,
 
 ### Task 9 – Responsive Design
 
-- [ ] Implement the desktop layout.
-- [ ] Support a viewport width of 375px.
-- [ ] Prevent horizontal overflow.
-- [ ] Verify input and button usability on mobile.
+- [x] Implement the desktop layout.
+- [x] Support a viewport width of 375px.
+- [x] Prevent horizontal overflow.
+- [x] Verify input and button usability on mobile.
 
 ### Task 10 – Testing and Quality Assurance
 

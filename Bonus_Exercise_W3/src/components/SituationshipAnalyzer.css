@@ -1,0 +1,177 @@
+
+.situationship-analyzer,
+.situationship-analyzer * {
+  box-sizing: border-box;
+}
+
+.situationship-analyzer {
+  --surface: #ffffff;
+  --surface-muted: #f8fafc;
+  --border: #e2e8f0;
+  --text: #172033;
+  --text-muted: #64748b;
+  --primary: #4f46e5;
+  --danger: #dc2626;
+
+  width: min(100%, 920px);
+  min-width: 0;
+  margin: 2rem auto;
+  padding: clamp(1rem, 4vw, 2rem);
+
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.situationship-analyzer header {
+  margin-bottom: 1.5rem;
+}
+
+.situationship-analyzer header h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 1.2;
+}
+
+.situationship-analyzer header p {
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.situationship-analyzer section {
+  min-width: 0;
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.situationship-analyzer h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.situationship-analyzer h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.situationship-analyzer button {
+  min-height: 42px;
+  margin: 0.35rem 0.35rem 0.35rem 0;
+
+  padding: 0.65rem 1rem;
+
+  color: white;
+  background: var(--primary);
+  border: 0;
+  border-radius: 8px;
+
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: normal;
+}
+
+.situationship-analyzer button:hover {
+  filter: brightness(0.92);
+}
+
+.situationship-analyzer button:focus-visible,
+.situationship-analyzer input:focus-visible {
+  outline: 3px solid #a5b4fc;
+  outline-offset: 3px;
+}
+
+.situationship-analyzer input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  margin-top: 0.4rem;
+
+  padding: 0.6rem 0.75rem;
+
+  color: var(--text);
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  font: inherit;
+}
+
+.situationship-analyzer section[aria-labelledby="effort-heading"] > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(100px, 150px) auto;
+  align-items: end;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.situationship-analyzer section[aria-labelledby="effort-heading"] label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.situationship-analyzer output {
+  display: block;
+  padding: 0.9rem;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.situationship-analyzer ol {
+  padding-left: 1.5rem;
+}
+
+.situationship-analyzer li {
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.situationship-analyzer li p {
+  margin: 0.25rem 0;
+}
+
+@media (max-width: 480px) {
+  .situationship-analyzer {
+    width: 100%;
+    margin: 0;
+    padding: 0.875rem;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .situationship-analyzer section {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .situationship-analyzer section[aria-labelledby="effort-heading"] > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+
+  .situationship-analyzer button {
+    width: 100%;
+    margin: 0.35rem 0;
+  }
+
+  .situationship-analyzer header h1 {
+    font-size: 1.65rem;
+  }
+}
+
