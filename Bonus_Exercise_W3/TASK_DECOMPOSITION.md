@@ -74,6 +74,7 @@ The application models relationship phases, calculates asymmetric effort impact,
 - [x] Display the red-flag status.
 - [x] Display the effort history.
 - [x] Add relationship phase controls.
+- [x] Mount SituationshipAnalyzer in App.jsx.
 
 ### Task 8 – Accessibility
 
