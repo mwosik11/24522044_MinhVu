@@ -93,16 +93,16 @@ The application models relationship phases, calculates asymmetric effort impact,
 
 ### Task 10 – Testing and Quality Assurance
 
-- [ ] Test the relationship state machine.
-- [ ] Test effort impact calculations.
-- [ ] Test immutable effort log behavior.
-- [ ] Test red-flag detection.
+- [x] Test the relationship state machine.
+- [x] Test effort impact calculations.
+- [x] Test immutable effort log behavior.
+- [x] Test red-flag detection.
 - [x] Test ghosting timer expiration.
 - [x] Test timer cleanup after phase changes.
 - [x] Test component interactions.
 - [x] Run all automated tests.
-- [ ] Run the production build.
-- [ ] Verify the application at 375px.
+- [x] Run the production build.
+- [x] Verify the application at 375px.
 
 ### Task 11 – Documentation and Final Review
 
