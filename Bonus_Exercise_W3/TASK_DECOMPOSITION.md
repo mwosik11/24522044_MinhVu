@@ -61,9 +61,9 @@ The application models relationship phases, calculates asymmetric effort impact,
 
 - [x] Implement the 5-second ghosting timer.
 - [x] Trigger GHOSTED_EXIT when the timer expires.
-- [ ] Cancel the pending timer when the phase changes.
-- [ ] Clean up the timer when the component unmounts.
-- [ ] Ensure timer dependencies are correct.
+- [x] Cancel the pending timer when the phase changes.
+- [x] Clean up the timer when the component unmounts.
+- [x] Ensure timer dependencies are correct.
 
 ### Task 7 – Analyzer Interface
 
@@ -96,8 +96,8 @@ The application models relationship phases, calculates asymmetric effort impact,
 - [ ] Test effort impact calculations.
 - [ ] Test immutable effort log behavior.
 - [ ] Test red-flag detection.
-- [ ] Test ghosting timer expiration.
-- [ ] Test timer cleanup after phase changes.
+- [x] Test ghosting timer expiration.
+- [x] Test timer cleanup after phase changes.
 - [ ] Test component interactions.
 - [ ] Run all automated tests.
 - [ ] Run the production build.
