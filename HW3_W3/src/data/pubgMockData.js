@@ -20,6 +20,7 @@ export const mockCrateDrops = [
     priceVnd: 1500000,
     remainingStock: 120,
     dropEpochMs: now + 5 * 60 * 1000,
+    dropEndEpochMs: now + 20 * 60 * 1000,
   },
   {
     id: "pvs-contraband-crate",
@@ -27,6 +28,7 @@ export const mockCrateDrops = [
     priceVnd: 250000,
     remainingStock: 80,
     dropEpochMs: now + 2 * 60 * 1000,
+    dropEndEpochMs: now + 12 * 60 * 1000,
   },
   {
     id: "gcoin-supply-crate",
@@ -34,6 +36,7 @@ export const mockCrateDrops = [
     priceVnd: 500000,
     remainingStock: 50,
     dropEpochMs: now + 10 * 60 * 1000,
+    dropEndEpochMs: now + 25 * 60 * 1000,
   },
 ];
 

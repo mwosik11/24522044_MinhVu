@@ -54,6 +54,7 @@ export const CLAIM_STATUS = Object.freeze({
  * @property {number} priceVnd
  * @property {number} remainingStock
  * @property {number} dropEpochMs
+ * @property {number} dropEndEpochMs
  */
 
 /**

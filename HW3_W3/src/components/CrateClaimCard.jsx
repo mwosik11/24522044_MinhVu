@@ -34,9 +34,11 @@ function formatCountdown(remainingMs) {
 }
 
 export default function CrateClaimCard({ drop }) {
-  const { remainingMs } = usePubgAirdropTimer(
-    drop.dropEpochMs
-  );
+  const { remainingMs: timeUntilStart } =
+    usePubgAirdropTimer(drop.dropEpochMs);
+
+  const { remainingMs: timeUntilEnd } =
+    usePubgAirdropTimer(drop.dropEndEpochMs);
 
   const {
     remainingStock,
@@ -61,17 +63,19 @@ export default function CrateClaimCard({ drop }) {
     };
   }, []);
 
-  const isLive = remainingMs === 0;
-
   let phase;
 
-  if (!isLive) {
+  if (timeUntilStart > 0) {
     phase = DROP_PHASE.WARMUP;
+  } else if (timeUntilEnd === 0) {
+    phase = DROP_PHASE.EXPIRED;
   } else if (remainingStock === 0) {
     phase = DROP_PHASE.LOOTED_OUT;
   } else {
     phase = DROP_PHASE.AIRDROP_LIVE;
   }
+
+const isLive = phase === DROP_PHASE.AIRDROP_LIVE;
 
   const phaseLabels = {
     [DROP_PHASE.WARMUP]: "COMING SOON",
@@ -169,14 +173,24 @@ export default function CrateClaimCard({ drop }) {
 
       <div className="drop-card__countdown">
         <span className="drop-card__label">
-          {isLive ? "AIRDROP STATUS" : "AIRDROP STARTS IN"}
+          {phase === DROP_PHASE.WARMUP
+            ? "AIRDROP STARTS IN"
+            : phase === DROP_PHASE.AIRDROP_LIVE
+              ? "AIRDROP ENDS IN"
+              : "AIRDROP STATUS"}
         </span>
 
         <output
           className="drop-card__timer"
           aria-label="Airdrop countdown"
         >
-          {formatCountdown(remainingMs)}
+          {phase === DROP_PHASE.WARMUP
+            ? formatCountdown(timeUntilStart)
+            : phase === DROP_PHASE.AIRDROP_LIVE
+              ? formatCountdown(timeUntilEnd)
+              : phase === DROP_PHASE.LOOTED_OUT
+                ? "SOLD OUT"
+                : "EXPIRED"}
         </output>
       </div>
 
@@ -200,11 +214,13 @@ export default function CrateClaimCard({ drop }) {
       >
         {isClaimPending
           ? "PROCESSING..."
-          : remainingStock <= 0
-            ? "SOLD OUT"
-            : !isLive
-              ? "COMING SOON"
-              : "CLAIM NOW"}
+          : phase === DROP_PHASE.EXPIRED
+            ? "EXPIRED"
+            : remainingStock <= 0
+              ? "SOLD OUT"
+              : !isLive
+                ? "COMING SOON"
+                : "CLAIM NOW"}
       </button>
 
       {claimState.status !== CLAIM_STATUS.IDLE && (
