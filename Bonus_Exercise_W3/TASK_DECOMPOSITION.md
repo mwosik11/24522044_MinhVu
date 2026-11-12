@@ -78,11 +78,11 @@ The application models relationship phases, calculates asymmetric effort impact,
 
 ### Task 8 – Accessibility
 
-- [ ] Generate unique input IDs using useId().
-- [ ] Associate labels with their corresponding inputs.
-- [ ] Add output role="status".
-- [ ] Add aria-live="polite" for status announcements.
-- [ ] Verify keyboard accessibility.
+- [x] Generate unique input IDs using useId().
+- [x] Associate labels with their corresponding inputs.
+- [x] Add output role="status".
+- [x] Add aria-live="polite" for status announcements.
+- [x] Verify keyboard accessibility.
 
 ### Task 9 – Responsive Design
 
