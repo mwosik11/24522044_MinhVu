@@ -59,8 +59,8 @@ The application models relationship phases, calculates asymmetric effort impact,
 
 ### Task 6 – Ghosting Timer
 
-- [ ] Implement the 5-second ghosting timer.
-- [ ] Trigger GHOSTED_EXIT when the timer expires.
+- [x] Implement the 5-second ghosting timer.
+- [x] Trigger GHOSTED_EXIT when the timer expires.
 - [ ] Cancel the pending timer when the phase changes.
 - [ ] Clean up the timer when the component unmounts.
 - [ ] Ensure timer dependencies are correct.
