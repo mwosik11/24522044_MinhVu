@@ -8,6 +8,14 @@ import {
   relationshipReducer,
 } from "../domain/relationshipMachine.js";
 
+import {
+  EFFORT_ACTOR,
+  createEffortSignal,
+  calculateEffortImpact,
+} from "../domain/effortCalculator.js";
+
+import { appendEffortSignal } from "../domain/effortLog.js";
+import { calculateEffortTotals } from "../domain/effortMetrics.js";
 import { detectRedFlag } from "../domain/redFlagDetector.js";
 import { useGhostingTimer } from "../hooks/useGhostingTimer.js";
 
@@ -29,9 +37,11 @@ export function SituationshipAnalyzer() {
   const [myTries, setMyTries] = useState(100);
   const [rivalTries, setRivalTries] = useState(1);
 
-  // Pure derived values: calculated directly during rendering.
-  const myImpact = myTries * 0.1;
-  const rivalImpact = rivalTries * 50.0;
+  const [effortLog, setEffortLog] = useState([]);
+
+  // Derived metrics calculated directly during rendering.
+  const { myImpact, rivalImpact } =
+    calculateEffortTotals(effortLog);
 
   const isRedFlag = detectRedFlag({
     phase,
@@ -39,7 +49,6 @@ export function SituationshipAnalyzer() {
     rivalImpact,
   });
 
-  // Automatically exits an unreciprocated situationship.
   useGhostingTimer(phase, myTries, setPhase);
 
   function dispatchEvent(eventType) {
@@ -65,6 +74,26 @@ export function SituationshipAnalyzer() {
     setRivalTries(
       Number.isFinite(value) && value >= 0 ? value : 0,
     );
+  }
+
+  function recordEffort(actor, steps) {
+    const signal = createEffortSignal({
+      id: crypto.randomUUID(),
+      actor,
+      steps,
+    });
+
+    setEffortLog((previousLog) =>
+      appendEffortSignal(previousLog, signal),
+    );
+  }
+
+  function recordMyEffort() {
+    recordEffort(EFFORT_ACTOR.EM, myTries);
+  }
+
+  function recordRivalEffort() {
+    recordEffort(EFFORT_ACTOR.AI_DO, rivalTries);
   }
 
   return (
@@ -141,6 +170,10 @@ export function SituationshipAnalyzer() {
             value={myTries}
             onChange={handleMyTriesChange}
           />
+
+          <button type="button" onClick={recordMyEffort}>
+            Record My Effort
+          </button>
         </div>
 
         <div>
@@ -155,7 +188,13 @@ export function SituationshipAnalyzer() {
             value={rivalTries}
             onChange={handleRivalTriesChange}
           />
+
+          <button type="button" onClick={recordRivalEffort}>
+            Record Rival Effort
+          </button>
         </div>
+
+        <h3>Total Effort Impact</h3>
 
         <p>My impact: {myImpact.toFixed(2)}</p>
         <p>Rival impact: {rivalImpact.toFixed(2)}</p>
@@ -174,7 +213,37 @@ export function SituationshipAnalyzer() {
             : "[OK] Relationship is stable."}
         </output>
       </section>
+
+      <section aria-labelledby="effort-history-heading">
+        <h2 id="effort-history-heading">Effort History</h2>
+
+        {effortLog.length === 0 ? (
+          <p>No effort signals recorded yet.</p>
+        ) : (
+          <ol>
+            {effortLog.map((signal) => (
+              <li key={signal.id}>
+                <p>
+                  Participant:{" "}
+                  <strong>
+                    {signal.actor === EFFORT_ACTOR.EM
+                      ? "Me"
+                      : "Rival"}
+                  </strong>
+                </p>
+
+                <p>Steps: {signal.steps}</p>
+                <p>Multiplier: {signal.multiplier}</p>
+
+                <p>
+                  Impact:{" "}
+                  {calculateEffortImpact(signal).toFixed(2)}
+                </p>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
     </article>
   );
 }
-
