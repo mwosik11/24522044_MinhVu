@@ -99,8 +99,8 @@ The application models relationship phases, calculates asymmetric effort impact,
 - [ ] Test red-flag detection.
 - [x] Test ghosting timer expiration.
 - [x] Test timer cleanup after phase changes.
-- [ ] Test component interactions.
-- [ ] Run all automated tests.
+- [x] Test component interactions.
+- [x] Run all automated tests.
 - [ ] Run the production build.
 - [ ] Verify the application at 375px.
 
