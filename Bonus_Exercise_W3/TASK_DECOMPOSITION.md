@@ -48,7 +48,7 @@ The application models relationship phases, calculates asymmetric effort impact,
 
 ### Task 5 – Red-Flag Detection
 
-- [ ] Calculate myImpact and rivalImpact from effort signals.
+- [x] Calculate myImpact and rivalImpact from effort signals.
 - [ ] Derive isRedFlag directly during rendering.
 - [ ] Apply the required condition:
       phase === DATING_NO_LOVE && myImpact < rivalImpact
