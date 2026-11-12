@@ -27,7 +27,7 @@ The application models relationship phases, calculates asymmetric effort impact,
 - [x] Define relationship events.
 - [x] Implement a pure relationship reducer.
 - [x] Prevent invalid state transitions.
-- [ ] Write unit tests for valid and invalid transitions.
+- [x] Write unit tests for valid and invalid transitions.
 
 ### Task 3 – Asymmetric Effort Calculator
 
