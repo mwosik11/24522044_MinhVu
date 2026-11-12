@@ -44,7 +44,7 @@ The application models relationship phases, calculates asymmetric effort impact,
 - [x] Define the initial effort log.
 - [x] Implement immutable signal insertion.
 - [x] Validate effort signals before appending.
-- [ ] Test that previous log states remain unchanged.
+- [x] Test that previous log states remain unchanged.
 
 ### Task 5 – Red-Flag Detection
 
