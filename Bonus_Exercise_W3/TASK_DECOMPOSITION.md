@@ -67,13 +67,13 @@ The application models relationship phases, calculates asymmetric effort impact,
 
 ### Task 7 – Analyzer Interface
 
-- [ ] Create SituationshipAnalyzer.jsx.
-- [ ] Connect the FSM reducer to React state.
-- [ ] Implement effort input controls.
-- [ ] Display calculated effort impact.
-- [ ] Display the red-flag status.
-- [ ] Display the effort history.
-- [ ] Add relationship phase controls.
+- [x] Create SituationshipAnalyzer.jsx.
+- [x] Connect the FSM reducer to React state.
+- [x] Implement effort input controls.
+- [x] Display calculated effort impact.
+- [x] Display the red-flag status.
+- [x] Display the effort history.
+- [x] Add relationship phase controls.
 
 ### Task 8 – Accessibility
 
