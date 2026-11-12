@@ -8,10 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "npm run test:domain && npm run test:hooks && npm run test:components",
+    "test": "npm run test:domain && npm run test:hooks && npm run test:components && npm run test:a11y",
     "test:domain": "node --test src/domain/*.test.js",
     "test:hooks": "vitest run src/hooks/useGhostingTimer.test.jsx",
-    "test:components": "vitest run src/components/SituationshipAnalyzer.test.jsx"
+    "test:components": "vitest run src/components/SituationshipAnalyzer.test.jsx",
+    "test:a11y": "vitest run src/components/SituationshipAnalyzer.accessibility.test.jsx"
   },
   "dependencies": {
     "react": "^19.3.1",
