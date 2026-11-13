@@ -1,0 +1,26 @@
+.skeleton {
+  display: grid;
+  gap: 0.75rem;
+  min-height: var(--detail-card-height, 220px);
+  padding: var(--space);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.line {
+  display: block;
+  height: 1.25rem;
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--surface) 25%, var(--border) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.line:first-of-type { width: 60%; height: 1.75rem; }
+.srOnly {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) { .line { animation: none; } }
