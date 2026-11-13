@@ -1,0 +1,28 @@
+.frame {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space);
+}
+.title { grid-column: 1 / -1; }
+.sidebar ul { list-style: none; display: grid; gap: 0.25rem; }
+.link {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  text-decoration: none;
+}
+.active { background: var(--surface); font-weight: 700; border-left: 4px solid var(--accent); }
+.content { min-width: 0; }
+.card {
+  min-height: var(--detail-card-height, 220px);
+  padding: var(--space);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 1rem;
+  margin-top: 0.5rem;
+}
+.details dt { font-weight: 700; color: var(--muted); }
