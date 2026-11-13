@@ -26,3 +26,7 @@
   margin-top: 0.5rem;
 }
 .details dt { font-weight: 700; color: var(--muted); }
+
+@media (min-width: 768px) {
+  .frame { grid-template-columns: minmax(280px, 1fr) 2fr; }
+}
