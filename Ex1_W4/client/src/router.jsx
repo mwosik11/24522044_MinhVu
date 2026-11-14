@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Navigate } from 'react-router';
 import RootLayout from './layouts/RootLayout.jsx';
 import Home from './pages/Home.jsx';
 import NotFound from './pages/NotFound.jsx';
@@ -8,6 +8,7 @@ import PeopleIndex from './features/people/PeopleIndex.jsx';
 import DetailSkeleton from './components/DetailSkeleton.jsx';
 import { SMART_PEOPLE } from './data/people.js';
 import SimpleForm from './features/form/SimpleForm.jsx';
+import ForumPage from './features/forum/ForumPage.jsx';
 
 // Ex 1.1: route-level code-splitting → PersonDetail nằm ở chunk riêng
 const PersonDetail = lazy(() => import('./features/people/PersonDetail.jsx'));
@@ -37,6 +38,8 @@ export const routes = [
       },
       { path: 'form', element: <SimpleForm /> },
       { path: '*', element: <NotFound /> },
+      { path: 'forum', element: <Navigate to="/forum/nasa" replace /> },
+      { path: 'forum/:forumId', element: <ForumPage /> },
     ],
   },
 ];

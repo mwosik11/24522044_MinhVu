@@ -14,6 +14,7 @@ export default function RootLayout() {
             <li><NavLink to="/" end className={navClass}>Home</NavLink></li>
             <li><NavLink to="/people" className={navClass}>People</NavLink></li>
             <li><NavLink to="/form" className={navClass}>Form</NavLink></li>
+            <li><NavLink to="/forum" className={navClass}>Forum</NavLink></li>
           </ul>
         </nav>
       </header>

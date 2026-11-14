@@ -1,0 +1,62 @@
+.page { display: grid; gap: var(--space); max-width: 48rem; }
+.channels { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; }
+.channel {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  text-decoration: none;
+}
+.active { background: var(--accent); color: var(--bg); font-weight: 700; border-color: var(--accent); }
+.feed {
+  min-height: 12rem;
+  padding: var(--space);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.messages { display: grid; gap: 0.25rem; margin-top: 0.5rem; }
+.messages dt { margin-top: 0.75rem; }
+.messages dt time { color: var(--muted); font-size: 0.875rem; }
+.messages dd { overflow-wrap: anywhere; }
+.empty { color: var(--muted); }
+.skeleton {
+  height: 8rem;
+  margin-top: 0.5rem;
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--surface) 25%, var(--border) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.alert { display: grid; gap: 0.5rem; margin-top: 0.5rem; color: var(--danger); }
+.composer { display: grid; gap: 0.75rem; }
+.field { display: grid; gap: 0.25rem; }
+.field input, .field textarea {
+  font: inherit;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+}
+.field [aria-invalid='true'] { border-color: var(--danger); border-width: 2px; }
+.error { color: var(--danger); font-weight: 600; font-size: 0.875rem; }
+.page button {
+  font: inherit;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  cursor: pointer;
+}
+.page button:disabled { opacity: 0.6; cursor: progress; }
+.srOnly {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
