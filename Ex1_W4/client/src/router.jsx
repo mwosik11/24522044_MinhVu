@@ -7,6 +7,7 @@ import PeopleLayout from './features/people/PeopleLayout.jsx';
 import PeopleIndex from './features/people/PeopleIndex.jsx';
 import DetailSkeleton from './components/DetailSkeleton.jsx';
 import { SMART_PEOPLE } from './data/people.js';
+import SimpleForm from './features/form/SimpleForm.jsx';
 
 // Ex 1.1: route-level code-splitting → PersonDetail nằm ở chunk riêng
 const PersonDetail = lazy(() => import('./features/people/PersonDetail.jsx'));
@@ -34,6 +35,7 @@ export const routes = [
           },
         ],
       },
+      { path: 'form', element: <SimpleForm /> },
       { path: '*', element: <NotFound /> },
     ],
   },

@@ -13,6 +13,7 @@ export default function RootLayout() {
           <ul className={styles.navList}>
             <li><NavLink to="/" end className={navClass}>Home</NavLink></li>
             <li><NavLink to="/people" className={navClass}>People</NavLink></li>
+            <li><NavLink to="/form" className={navClass}>Form</NavLink></li>
           </ul>
         </nav>
       </header>
