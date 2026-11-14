@@ -2,6 +2,8 @@ import { FormProvider, useFormContext } from './FormContext.jsx';
 import { InputField } from './InputField.jsx';
 import { INITIAL_VALUES } from './validateForm.js';
 import styles from './Form.module.css';
+import { useState } from 'react';
+import { ShowData } from './ShowData.jsx';
 
 /** Phần thân form: dùng context để submit, không giữ state validate riêng */
 function RegistrationForm({ onValidSubmit }) {
@@ -37,11 +39,14 @@ function RegistrationForm({ onValidSubmit }) {
 }
 
 export default function SimpleForm() {
+  const [submitted, setSubmitted] = useState(null);
+
   return (
     <section className={styles.page}>
       <FormProvider initialValues={INITIAL_VALUES}>
-        <RegistrationForm onValidSubmit={() => {}} />
+        <RegistrationForm onValidSubmit={setSubmitted} />
       </FormProvider>
+      {submitted && <ShowData data={submitted} />}
     </section>
   );
 }
