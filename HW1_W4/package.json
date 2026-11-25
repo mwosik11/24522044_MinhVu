@@ -1,0 +1,28 @@
+{
+  "name": "hw1-w4-photo-evidence-gallery",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Lab 4 Homework — Production Multi-Route Photo & Evidence Gallery SPA (React 19 + React Router v7)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router": "^7.9.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "jsdom": "^31.0.1",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  }
+}
