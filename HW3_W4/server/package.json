@@ -1,0 +1,21 @@
+{
+  "name": "fairplay-tribunal-server",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch-path=./src --watch-path=../shared --env-file=.env src/index.js",
+    "start": "node --env-file=.env src/index.js",
+    "seed": "node --env-file=.env src/seed.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.19.0"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.0.0",
+    "supertest": "^7.1.0",
+    "vitest": "^5.1.1"
+  }
+}
