@@ -22,6 +22,16 @@ beforeEach(() => {
 
 const renderTimer = (deadline, options) => renderHook(() => useAppealSlaTimer(deadline, options));
 
+/**
+ * Advance fake time in steps, one act() per step, so React re-renders and the hook
+ * can schedule its next setTimeout between ticks (as it does in a real browser).
+ */
+function advance(ms, step = SECOND) {
+  for (let elapsed = 0; elapsed < ms; elapsed += step) {
+    act(() => vi.advanceTimersByTime(Math.min(step, ms - elapsed)));
+  }
+}
+
 describe('splitDuration', () => {
   it('splits milliseconds into days, hours, minutes and seconds', () => {
     expect(splitDuration(1 * 24 * HOUR + HOUR + MINUTE + SECOND + 999)).toEqual({
@@ -45,9 +55,9 @@ describe('useAppealSlaTimer', () => {
     expect(result.current).toMatchObject({ hours: 1, minutes: 59, seconds: 59 });
   });
 
-  it('has zero drift after an hour of ticks', () => {
+    it('has zero drift after an hour of ticks', () => {
     const { result } = renderTimer(T0 + 2 * HOUR);
-    act(() => vi.advanceTimersByTime(HOUR));
+    advance(HOUR); // 3600 real ticks, each recomputed from Date.now()
     expect(result.current.remainingMs).toBe(HOUR);
   });
 
@@ -82,9 +92,9 @@ describe('useAppealSlaTimer', () => {
     expect(renderTimer(T0 + HOUR).result.current.isUrgent).toBe(false);
   });
 
-  it('expires at zero and stops scheduling timers', () => {
+    it('expires at zero and stops scheduling timers', () => {
     const { result } = renderTimer(T0 + 1500);
-    act(() => vi.advanceTimersByTime(2 * SECOND));
+    advance(2 * SECOND);
     expect(result.current).toMatchObject({ remainingMs: 0, isExpired: true, isUrgent: false });
     expect(vi.getTimerCount()).toBe(0);
   });
