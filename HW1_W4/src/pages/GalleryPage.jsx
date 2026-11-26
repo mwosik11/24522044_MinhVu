@@ -4,6 +4,7 @@ import {
   DEFAULT_CATEGORY,
   filterPhotos,
   findPhotoById,
+  getAdjacentPhotoIds,
   parseGalleryParams,
   withCategory,
   withoutPhoto,
@@ -27,9 +28,16 @@ export function GalleryPage() {
   const visiblePhotos = filterPhotos(PHOTOS, category);
   // Look up in ALL photos: a shared link may point outside the active filter.
   const selectedPhoto = findPhotoById(PHOTOS, photoId);
+  const { prevId, nextId } = getAdjacentPhotoIds(visiblePhotos, photoId);
+  const position = visiblePhotos.findIndex((p) => p.id === photoId);
+  const positionLabel = position === -1 ? undefined : `${position + 1} / ${visiblePhotos.length}`;
 
   const selectCategory = (slug) => setSearchParams((prev) => withCategory(prev, slug));
   const getPhotoHref = (id) => ({ search: `?${withPhoto(searchParams, id)}` });
+
+  // REPLACE: browsing with ←/→ must not flood the history stack.
+  const navigateToPhoto = (id) =>
+    setSearchParams((prev) => withPhoto(prev, id), { replace: true });
 
   // Fired on every native `close` event. If photoId is already gone (Back
   // button / filter change closed the dialog programmatically) there is
@@ -67,7 +75,14 @@ export function GalleryPage() {
 
       <PhotoGrid photos={visiblePhotos} getPhotoHref={getPhotoHref} />
 
-      <Lightbox photo={selectedPhoto} onClose={handleDialogClose} />
+      <Lightbox
+        photo={selectedPhoto}
+        prevId={prevId}
+        nextId={nextId}
+        positionLabel={positionLabel}
+        onNavigate={navigateToPhoto}
+        onClose={handleDialogClose}
+      />
     </section>
   );
 }

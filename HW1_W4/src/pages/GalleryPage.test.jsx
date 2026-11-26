@@ -115,3 +115,15 @@ describe('GalleryPage — <dialog> lightbox deep link', () => {
     expect(getDialog()).not.toHaveAttribute('open');
   });
 });
+
+
+describe('GalleryPage — focus management (WCAG 2.4.3)', () => {
+  it('returns focus to the card of the last viewed photo after closing', async () => {
+    const user = userEvent.setup();
+    renderGallery('/gallery?category=documents&photoId=ev-10');
+    await screen.findByRole('heading', { level: 1 });
+    fireEvent.keyDown(getDialog(), { key: 'ArrowRight' }); // now on ev-11
+    await user.click(within(getDialog()).getByRole('button', { name: 'Close photo' }));
+    expect(document.activeElement).toHaveAttribute('data-photo-id', 'ev-11');
+  });
+});
