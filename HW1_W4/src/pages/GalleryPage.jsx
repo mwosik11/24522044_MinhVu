@@ -1,15 +1,6 @@
-import { useSearchParams } from 'react-router';
 import { CATEGORIES, PHOTOS } from '../data/photos.js';
-import {
-  DEFAULT_CATEGORY,
-  filterPhotos,
-  findPhotoById,
-  getAdjacentPhotoIds,
-  parseGalleryParams,
-  withCategory,
-  withoutPhoto,
-  withPhoto,
-} from '../lib/galleryParams.js';
+import { DEFAULT_CATEGORY } from '../lib/galleryParams.js';
+import { useGalleryParams } from '../hooks/useGalleryParams.js';
 import { CategoryFilter } from '../components/CategoryFilter.jsx';
 import { Lightbox } from '../components/Lightbox.jsx';
 import { PhotoGrid } from '../components/PhotoGrid.jsx';
@@ -21,30 +12,21 @@ const COUNTS = Object.fromEntries([
 ]);
 
 export function GalleryPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  // Derived during render — the URL is the only state.
-  const { category, isCategoryValid, rawCategory, photoId } = parseGalleryParams(searchParams);
-  const visiblePhotos = filterPhotos(PHOTOS, category);
-  // Look up in ALL photos: a shared link may point outside the active filter.
-  const selectedPhoto = findPhotoById(PHOTOS, photoId);
-  const { prevId, nextId } = getAdjacentPhotoIds(visiblePhotos, photoId);
-  const position = visiblePhotos.findIndex((p) => p.id === photoId);
-  const positionLabel = position === -1 ? undefined : `${position + 1} / ${visiblePhotos.length}`;
-
-  const selectCategory = (slug) => setSearchParams((prev) => withCategory(prev, slug));
-  const getPhotoHref = (id) => ({ search: `?${withPhoto(searchParams, id)}` });
-
-  // REPLACE: browsing with ←/→ must not flood the history stack.
-  const navigateToPhoto = (id) =>
-    setSearchParams((prev) => withPhoto(prev, id), { replace: true });
-
-  // Fired on every native `close` event. If photoId is already gone (Back
-  // button / filter change closed the dialog programmatically) there is
-  // nothing to sync — navigating again would push a duplicate history entry.
-  const handleDialogClose = () => {
-    if (photoId) setSearchParams((prev) => withoutPhoto(prev));
-  };
+  const {
+    category,
+    isCategoryValid,
+    rawCategory,
+    photoId,
+    visiblePhotos,
+    selectedPhoto,
+    prevId,
+    nextId,
+    positionLabel,
+    selectCategory,
+    getPhotoHref,
+    navigateToPhoto,
+    closePhoto,
+  } = useGalleryParams();
 
   return (
     <section className="page" aria-labelledby="gallery-heading">
@@ -81,7 +63,7 @@ export function GalleryPage() {
         nextId={nextId}
         positionLabel={positionLabel}
         onNavigate={navigateToPhoto}
-        onClose={handleDialogClose}
+        onClose={closePhoto}
       />
     </section>
   );
